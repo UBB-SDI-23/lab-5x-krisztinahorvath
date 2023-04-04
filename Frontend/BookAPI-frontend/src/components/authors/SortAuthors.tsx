@@ -9,7 +9,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
 
-export const ShowAllAuthors = () => {
+export const SortAuthors = () => {
     const [loading, setLoading] = useState(false);
     const [authors, setAuthors] = useState<Author[]>([]);
     
@@ -18,7 +18,8 @@ export const ShowAllAuthors = () => {
         fetch(`${BACKEND_URL}/authors`)
         .then(response => response.json())
         .then(data => { 
-            setAuthors(data); 
+			const sortedAuthors = data.sort((a: Author, b: Author) => a.name.localeCompare(b.name));
+            setAuthors(sortedAuthors); 
             setLoading(false); });
     } , []);
 
@@ -36,8 +37,8 @@ export const ShowAllAuthors = () => {
 				</IconButton>
 			)}
 
-			{!loading && (
-				<IconButton component={Link} sx={{ mr: 3 }} to={`/authors/ordered-authors`}>
+            {!loading && (
+				<IconButton component={Link} sx={{ mr: 3 }} to={`/authors/ordered/authors`}>
 					<Tooltip title="Sort authors alphabetically" arrow>
 						<FilterListIcon color="primary" />
 					</Tooltip>
