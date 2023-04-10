@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../constants";
-import {CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
+import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { Author } from "../../models/Author";
-import { Link } from "react-router-dom";
+import { Link, useRouteLoaderData } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
@@ -12,7 +12,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 export const ShowAllAuthors = () => {
     const [loading, setLoading] = useState(false);
     const [authors, setAuthors] = useState<Author[]>([]);
-    
+    const [page, setPage] = useState(1);
     useEffect(() => {
         setLoading(true);
         fetch(`${BACKEND_URL}/authors`)
@@ -21,6 +21,27 @@ export const ShowAllAuthors = () => {
             setAuthors(data); 
             setLoading(false); });
     } , []);
+
+	const reloadData=()=>{
+		setLoading(true);
+		fetch(`${BACKEND_URL}/authors/?pageNumber=${page}&pageSize=10`)
+        .then(response => response.json())
+        .then(data => { 
+            setAuthors(data); 
+            setLoading(false); });
+	}
+
+	const increasePage=(e: any)=>{
+		setPage(page + 1);
+		reloadData();
+	}
+
+	const decreasePage=(e:any)=>{
+		if(page >= 1){
+			setPage(page - 1);
+			reloadData();
+		}
+	}
 
     return (
 		<Container>
@@ -61,7 +82,7 @@ export const ShowAllAuthors = () => {
 							{authors.map((author, index) => (
 								<TableRow key={author.id}>
 									<TableCell component="th" scope="row">
-										{index + 1}
+										{page * 10 + index + 1}
 									</TableCell>
 									<TableCell component="th" scope="row">
 										<Link to={`/authors/${author.id}/details`} title="View authors details">
@@ -96,6 +117,8 @@ export const ShowAllAuthors = () => {
 					</Table>
 				</TableContainer>
 			)}
+			<Button variant="contained" color="secondary" onClick={decreasePage}> Previous </Button>
+			<Button variant="contained" color="secondary" onClick={increasePage}> Next </Button>
 		</Container>
 	);
 }

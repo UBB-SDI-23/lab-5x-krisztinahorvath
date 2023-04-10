@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab3BookAPI.Validations;
-
+using Microsoft.AspNetCore.Cors;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -21,15 +21,27 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/Authors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthor()
+        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthor(int? pageNumber=1, int? pageSize=10)
         {
-            if (_context.Authors == null)
+            var authors = _context.Authors.AsQueryable();
+
+            if (authors == null)
             {
                 return NotFound();
             }
-            //return await _context.Authors.ToListAsync();
-            return await _context.Authors.Select(x => AuthorToDTO(x)).ToListAsync();
+
+            var totalAuthors = await authors.CountAsync();
+
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                authors = authors.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            }
+
+            Response.Headers.Add("X-Total-Count", totalAuthors.ToString());
+
+            return await authors.Select(x => AuthorToDTO(x)).ToListAsync();
         }
+
 
         // GET: api/Authors/5
         [HttpGet("{id}")]

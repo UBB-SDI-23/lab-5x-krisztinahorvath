@@ -2,6 +2,7 @@ using Lab3BookAPI.Model;
 using Lab3BookAPI.Utils;
 using Lab3BookAPI.Validations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BooksAPI
 {
@@ -18,9 +19,18 @@ namespace BooksAPI
             builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             builder.Services.AddSingleton<Validate>();
 
+
             // add the database context to the DI container
             // and specify that the database context will use a sql server database
-            builder.Services.AddDbContext<BookContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BooksDatabase")));
+
+            var localConnectionString = "LocalBooksDatabase";
+            if (localConnectionString.IsNullOrEmpty())
+            {
+                builder.Services.AddDbContext<BookContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BooksDatabase")));
+            }
+            else
+                builder.Services.AddDbContext<BookContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(localConnectionString)));
+            // builder.Services.AddDbContext<BookContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BooksDatabase")));
 
             // add endpoints
             builder.Services.AddEndpointsApiExplorer();
@@ -40,11 +50,11 @@ namespace BooksAPI
             var app = builder.Build();
 
             // seed database
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                SeedData.Initialize(services);
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    SeedData.Initialize(services);
+            //}
 
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -52,7 +62,7 @@ namespace BooksAPI
             // configure the HTTP request pipeline for swagger
             if (app.Environment.IsDevelopment())
             {
-                ;
+                app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             }
 
             app.UseHttpsRedirection();
