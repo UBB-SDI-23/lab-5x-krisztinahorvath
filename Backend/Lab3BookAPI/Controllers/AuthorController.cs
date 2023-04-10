@@ -21,7 +21,7 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/Authors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthor(int? pageNumber=1, int? pageSize=10)
+        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthor(int? pageNumber = 1, int? pageSize = 10)
         {
             var authors = _context.Authors.AsQueryable();
 
@@ -67,7 +67,7 @@ namespace Lab3BookAPI.Controllers
                 YearOfBirth = author.YearOfBirth,
                 Address = author.Address,
                 Email = author.Email,
-                PhoneNumber =   author.PhoneNumber,
+                PhoneNumber = author.PhoneNumber,
                 Books = book
 
             };
@@ -182,7 +182,7 @@ namespace Lab3BookAPI.Controllers
                 return Problem("Entity set 'BookContext.Author'  is null.");
             }
 
-            if(!_validate.IsStringNonEmpty(authorDTO.Name))
+            if (!_validate.IsStringNonEmpty(authorDTO.Name))
             {
                 return BadRequest("Entity set 'BookContext.Author.Name'  is null.");
             }
@@ -192,12 +192,12 @@ namespace Lab3BookAPI.Controllers
                 return BadRequest("The given 'Email' already exists in the database!");
             }
 
-            if (!_validate.IsValidEmail(authorDTO.Email)) 
+            if (!_validate.IsValidEmail(authorDTO.Email))
             {
                 return BadRequest("The field 'Email' should be of the form: 'text@text.com'");
             }
 
-            if (!_validate.IsDateValid(authorDTO.YearOfBirth)) 
+            if (!_validate.IsDateValid(authorDTO.YearOfBirth))
             {
                 return BadRequest("The field 'YearOfBirth' should be a positive integer between 1500 and 2023!");
             }
