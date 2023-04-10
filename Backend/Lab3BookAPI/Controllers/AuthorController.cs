@@ -42,6 +42,16 @@ namespace Lab3BookAPI.Controllers
             return await authors.Select(x => AuthorToDTO(x)).ToListAsync();
         }
 
+        [HttpGet("autocomplete")]
+        public async Task<ActionResult<IEnumerable<Author>>> AutocompleteName(string query, int pageNumber=1, int pageSize=100)
+        {
+            var names = await _context.Authors.Where(t => t.Name.Contains(query))
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Ok(names);
+        }
 
         // GET: api/Authors/5
         [HttpGet("{id}")]
