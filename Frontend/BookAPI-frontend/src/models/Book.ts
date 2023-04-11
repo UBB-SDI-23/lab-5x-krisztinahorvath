@@ -10,5 +10,6 @@ export interface Book{
     price: number;
     genreId: number;
     genre: Genre;
+    transcript: string;
     bookAuthors: BookAuthor[];
 }

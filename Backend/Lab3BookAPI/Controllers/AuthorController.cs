@@ -117,7 +117,9 @@ namespace Lab3BookAPI.Controllers
                                PhoneNumber = g.Key.PhoneNumber,
                                AvgPages = g.Average(book => book.Pages)
                            }
-                     ).OrderBy(dto => dto.AvgPages).ToListAsync();
+                     )
+                     .Take(100)
+                     .OrderBy(dto => dto.AvgPages).ToListAsync();
 
             return b;
         }

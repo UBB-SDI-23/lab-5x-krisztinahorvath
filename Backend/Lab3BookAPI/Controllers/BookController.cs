@@ -109,6 +109,7 @@ namespace Lab3BookAPI.Controllers
                          Year = g.Key.Year,
                          Pages = g.Key.Pages,
                          Price = g.Key.Price,
+                         Transcript = g.Key.Transcript,
                          AverageAuthorAge = g.Average(author => DateTime.Now.Year - author.YearOfBirth)
                      }
                      ).OrderBy(dto => dto.AverageAuthorAge).ToListAsync();
@@ -164,6 +165,7 @@ namespace Lab3BookAPI.Controllers
             book.Year = bookDTO.Year;
             book.Pages = bookDTO.Pages;
             book.Price = bookDTO.Price;
+            book.Transcript = bookDTO.Transcript;
 
             book.GenreId = bookDTO.GenreId;
             book.Genre = genre;
@@ -331,6 +333,7 @@ namespace Lab3BookAPI.Controllers
                 Year = bookDTO.Year,
                 Pages = bookDTO.Pages,
                 Price = bookDTO.Price,
+                Transcript = bookDTO.Transcript,
 
                 GenreId = bookDTO.GenreId,
                 Genre = genre
@@ -379,7 +382,8 @@ namespace Lab3BookAPI.Controllers
                 Year = book.Year,
                 Pages = book.Pages,
                 Price = book.Price,
-                GenreId = book.GenreId
+                GenreId = book.GenreId,
+                Transcript = book.Transcript
             };
         }
 

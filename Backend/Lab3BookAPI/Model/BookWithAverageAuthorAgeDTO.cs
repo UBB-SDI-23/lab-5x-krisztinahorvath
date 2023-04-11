@@ -8,6 +8,7 @@
         public int Year { get; set; }
         public int Pages { get; set; }
         public float Price { get; set; }
+        public string? Transcript { get; set; } 
         public double? AverageAuthorAge { get; set; }
     }
 }

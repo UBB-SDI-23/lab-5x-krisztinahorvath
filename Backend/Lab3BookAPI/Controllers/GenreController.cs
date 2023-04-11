@@ -120,6 +120,7 @@ namespace Lab3BookAPI.Controllers
                     Year = b.Year,
                     Pages = b.Pages,
                     Price = b.Price,
+                    Transcript = b.Transcript,
                     GenreId = id
                 };
 

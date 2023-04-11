@@ -9,8 +9,11 @@
         public int Pages { get; set; }
         public float Price { get; set; }
 
+        public string? Transcript { get; set; } 
+
         public int GenreId { get; set; }
         public virtual Genre Genre { get; set; } = null!;
+
 
         public virtual ICollection<BookAuthor> BookAuthors { get; set;  }
     }
