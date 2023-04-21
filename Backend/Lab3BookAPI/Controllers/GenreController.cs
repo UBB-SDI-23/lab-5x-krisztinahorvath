@@ -17,15 +17,18 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/genre
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres()
+        public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres(int pageNumber = 0, int pageSize = 10)
         {
             if (_context.Genres == null)
             {
                 return NotFound();
             }
 
-            return await _context.Genres.Select(x => GenreToDTO(x)).ToListAsync();
-
+            //return await _context.Genres.Select(x => GenreToDTO(x)).ToListAsync();
+            return await _context.Genres.Skip(pageNumber * pageSize)
+                .Take(pageSize)
+                .Select(x => GenreToDTO(x))
+                .ToListAsync();
         }
 
         // GET: api/genre/5

@@ -22,14 +22,18 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/BookItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDTO>>> GetBookItems()
+        public async Task<ActionResult<IEnumerable<BookDTO>>> GetBookItems(int pageNumber = 0, int pageSize = 10)
         {
             if (_context.Books == null)
             {
                 return NotFound();
             }
 
-            return await _context.Books.Select(x => BookToDTO(x)).ToListAsync();
+            //return await _context.Books.Select(x => BookToDTO(x)).ToListAsync();
+            return await _context.Books.Skip(pageNumber * pageSize)
+                .Take(pageSize)
+                .Select(x => BookToDTO(x))
+                .ToListAsync();
         }
 
         [HttpGet("bookAuthor")]

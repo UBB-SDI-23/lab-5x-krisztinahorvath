@@ -12,7 +12,10 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 export const ShowAllAuthors = () => {
     const [loading, setLoading] = useState(false);
     const [authors, setAuthors] = useState<Author[]>([]);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
+
+	const pageSize = 10;
+
     useEffect(() => {
         setLoading(true);
         fetch(`${BACKEND_URL}/authors`)
@@ -24,7 +27,7 @@ export const ShowAllAuthors = () => {
 
 	const reloadData=()=>{
 		setLoading(true);
-		fetch(`${BACKEND_URL}/authors/?pageNumber=${page}&pageSize=10`)
+		fetch(`${BACKEND_URL}/authors/?pageNumber=${page}&pageSize=${pageSize}`)
         .then(response => response.json())
         .then(data => { 
             setAuthors(data); 

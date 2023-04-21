@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab3BookAPI.Validations;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.Identity.Client;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -21,25 +22,33 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/Authors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthor(int? pageNumber = 1, int? pageSize = 10)
+        public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthor(int pageNumber = 0, int pageSize = 10)
         {
-            var authors = _context.Authors.AsQueryable();
+            //var authors = _context.Authors.AsQueryable();
 
-            if (authors == null)
-            {
+            //if (authors == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var totalAuthors = await authors.CountAsync();
+
+            //if (pageNumber.HasValue && pageSize.HasValue)
+            //{
+            //    authors = authors.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            //}
+
+            //Response.Headers.Add("X-Total-Count", totalAuthors.ToString());
+
+            //return await authors.Select(x => AuthorToDTO(x)).ToListAsync();
+
+            if (_context.Authors == null)
                 return NotFound();
-            }
 
-            var totalAuthors = await authors.CountAsync();
-
-            if (pageNumber.HasValue && pageSize.HasValue)
-            {
-                authors = authors.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
-            }
-
-            Response.Headers.Add("X-Total-Count", totalAuthors.ToString());
-
-            return await authors.Select(x => AuthorToDTO(x)).ToListAsync();
+            return await _context.Authors.Skip(pageNumber * pageSize)
+                .Take(pageSize)
+                .Select(x => AuthorToDTO(x))
+                .ToListAsync();
         }
 
         [HttpGet("autocomplete")]
