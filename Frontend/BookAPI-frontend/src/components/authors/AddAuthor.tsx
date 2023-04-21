@@ -77,7 +77,7 @@ export const AddAuthor = () => {
 					<IconButton component={Link} sx={{ mr: 3 }} to={`/authors`}>
 						<ArrowBackIcon />
 					</IconButton>{" "}
-					<form onSubmit={addAuthor}>
+					<form onSubmit={addAuthor} style={{ display: 'flex', flexDirection: 'column', width: 300 }}>
                     <Autocomplete
 							id="name"
 							options={authorNames}

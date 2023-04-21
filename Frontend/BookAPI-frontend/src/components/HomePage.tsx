@@ -8,7 +8,7 @@ export const HomePage = () => {
 
 			<Container>
 				<Typography variant="h4" component="h4" gutterBottom>
-					Welcome to the app! Use the menu above to navigate.
+					So many books, so little time...
 				</Typography>
 			</Container>
 		</React.Fragment>

@@ -15,6 +15,13 @@ import { DeleteAuthor } from "./components/authors/DeleteAuthor";
 import { UpdateAuthor } from "./components/authors/UpdateAuthor";
 import { AuthorWithAvgBookLength } from "./components/authors/AuthorsStatisticalReport";
 import { SortAuthors } from "./components/authors/SortAuthors";
+import { ShowAllBooks } from "./components/books/ShowAllBooks";
+import { BookDetails } from "./components/books/BookDetails";
+import { ShowAllGenres } from "./components/genres/ShowAllGenres";
+import { GenreDetails } from "./components/genres/GenreDetails";
+import { AddGenre } from "./components/genres/AddGenre";
+import { DeleteGenre } from "./components/genres/DeleteGenre";
+import { UpdateGenre } from "./components/genres/UpdateGenre";
 
 function App() {
 
@@ -25,6 +32,7 @@ function App() {
 
 				<Routes>
 					<Route path="/" element={<HomePage />} />
+
 					<Route path="/authors" element={<ShowAllAuthors />} />
 					<Route path="/authors/add" element={<AddAuthor />} /> 
 					<Route path="/authors/:authorId/details" element={<AuthorDetails />} />
@@ -32,6 +40,15 @@ function App() {
 					<Route path="/authors/:authorId/edit" element={<UpdateAuthor />} />
 					<Route path="/authors/order-by-page-number" element={<AuthorWithAvgBookLength />} />	
 					<Route path="/authors/ordered-authors" element={< SortAuthors/>} />	
+
+					<Route path="/books" element={<ShowAllBooks />} />
+					<Route path="/books/:bookId/details" element={<BookDetails />} />
+
+					<Route path="/genres" element={<ShowAllGenres />} />
+					<Route path="/genres/add" element={<AddGenre />} /> 
+					<Route path="/genres/:genreId/details" element={<GenreDetails />} />
+					<Route path="/genres/:genreId/delete" element={<DeleteGenre />} />
+					<Route path="/genres/:genreId/edit" element={<UpdateGenre />} />
 				</Routes>
 			</Router>
 		</React.Fragment>

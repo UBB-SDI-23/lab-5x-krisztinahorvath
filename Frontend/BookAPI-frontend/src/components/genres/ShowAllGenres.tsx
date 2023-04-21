@@ -2,39 +2,40 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../constants";
 import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
-import { Author } from "../../models/Author";
 import { Link, useRouteLoaderData } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
+import { Genre } from "../../models/Genre";
 
-export const ShowAllAuthors = () => {
+
+export const ShowAllGenres = () => {
     const [loading, setLoading] = useState(false);
-    const [authors, setAuthors] = useState<Author[]>([]);
+    const [genres, setGenres] = useState<Genre[]>([]);
     const [page, setPage] = useState(0);
 
-	const pageSize = 10;
+    const pageSize = 10;
 
     useEffect(() => {
         setLoading(true);
-        fetch(`${BACKEND_URL}/authors`)
+        fetch(`${BACKEND_URL}/genres`)
         .then(response => response.json())
         .then(data => { 
-            setAuthors(data); 
+            setGenres(data); 
             setLoading(false); });
     } , []);
 
-	const reloadData=()=>{
+    const reloadData=()=>{
 		setLoading(true);
-		fetch(`${BACKEND_URL}/authors/?pageNumber=${page}&pageSize=${pageSize}`)
+		fetch(`${BACKEND_URL}/genres/?pageNumber=${page}&pageSize=${pageSize}`)
         .then(response => response.json())
         .then(data => { 
-            setAuthors(data); 
+            setGenres(data); 
             setLoading(false); });
 	}
 
-	const increasePage=(e: any)=>{
+    const increasePage=(e: any)=>{
 		setPage(page + 1);
 		reloadData();
 	}
@@ -48,69 +49,61 @@ export const ShowAllAuthors = () => {
 
     return (
 		<Container>
-			<h1>All authors</h1>
+			<h1>All books</h1>
 
 			{loading && <CircularProgress />}
-			{!loading && authors.length === 0 && <p>No authors found</p>}
+			{!loading && genres.length === 0 && <p>No genres found</p>}
 			{!loading && (
-				<IconButton component={Link} sx={{ mr: 3 }} to={`/authors/add`}>
-					<Tooltip title="Add a new author" arrow>
+				<IconButton component={Link} sx={{ mr: 3 }} to={`/genres/add`}>
+					<Tooltip title="Add a new genre" arrow>
 						<AddIcon color="primary" />
 					</Tooltip>
 				</IconButton>
 			)}
 
-			{!loading && (
-				<IconButton component={Link} sx={{ mr: 3 }} to={`/authors/ordered-authors`}>
-					<Tooltip title="Sort authors alphabetically" arrow>
-						<FilterListIcon color="primary" />
-					</Tooltip>
-				</IconButton>
-			)}
-
-			{!loading && authors.length > 0 && (
+			{!loading && genres.length > 0 && (
 				<TableContainer component={Paper}>
 					<Table sx={{ minWidth: 650 }} aria-label="simple table">
 						<TableHead>
 							<TableRow>
 								<TableCell>#</TableCell>
 								<TableCell align="right">Name</TableCell>
-								<TableCell align="right">Year of Birth</TableCell>
-								<TableCell align="right">Address</TableCell>
-								<TableCell align="right">Email</TableCell>
-                                <TableCell align="right">Phone Number</TableCell>
+								<TableCell align="right">Description</TableCell>
+								<TableCell align="right">Subgenre</TableCell>
+								<TableCell align="right">Country of Origin</TableCell>
+                                <TableCell align="right">Genre Rating</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{authors.map((author, index) => (
-								<TableRow key={author.id}>
+							{genres.map((genre, index) => (
+								<TableRow key={genre.id}>
 									<TableCell component="th" scope="row">
 										{page * 10 + index + 1}
 									</TableCell>
 									<TableCell component="th" scope="row">
-										<Link to={`/authors/${author.id}/details`} title="View authors details">
-											{author.name}
+										<Link to={`/genres/${genre.id}/details`} title="View book details">
+											{genre.name}
 										</Link>
 									</TableCell>
-									<TableCell align="right">{author.yearOfBirth}</TableCell>
-									<TableCell align="right">{author.address}</TableCell>
-                                    <TableCell align="right">{author.email}</TableCell>
-                                    <TableCell align="right">{author.phoneNumber}</TableCell>
-									<TableCell align="right">
+									<TableCell align="right">{genre.description}</TableCell>
+									<TableCell align="right">{genre.subgenre}</TableCell>
+                                    <TableCell align="right">{genre.countryOfOrigin}</TableCell>
+                                    <TableCell align="right">{genre.genreRating}</TableCell>
+                                   	<TableCell align="right">
 										<IconButton
 											component={Link}
 											sx={{ mr: 3 }}
-											to={`/authors/${author.id}/details`}>
-											<Tooltip title="View author details" arrow>
+											to={`/genres/${genre.id}/details`}>
+											<Tooltip title="View genre details" arrow>
 												<ReadMoreIcon color="primary" />
 											</Tooltip>
 										</IconButton>
 
-										<IconButton component={Link} sx={{ mr: 3 }} to={`/authors/${author.id}/edit`}>
+										<IconButton component={Link} sx={{ mr: 3 }} to={`/genres/${genre.id}/edit`}>
 											<EditIcon />
 										</IconButton>
 
-										<IconButton component={Link} sx={{ mr: 3 }} to={`/authors/${author.id}/delete`}>
+										<IconButton component={Link} sx={{ mr: 3 }} to={`/genres/${genre.id}/delete`}>
 											<DeleteForeverIcon sx={{ color: "red" }} />
 										</IconButton>
 									</TableCell>

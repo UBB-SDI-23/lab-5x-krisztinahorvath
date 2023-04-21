@@ -37,13 +37,22 @@ export const AppMenu = () => {
 						Authors
 					</Button>
 				    <Button
-						variant={path.startsWith("/authors") ? "outlined" : "text"}
-						to="/authors"
+						variant={path.startsWith("/books") ? "outlined" : "text"}
+						to="/books"
 						component={Link}
 						color="inherit"
 						sx={{ mr: 5 }}
 						startIcon={<LocalLibraryIcon />}>
 						Books
+					</Button>
+					<Button
+						variant={path.startsWith("/genres") ? "outlined" : "text"}
+						to="/genres"
+						component={Link}
+						color="inherit"
+						sx={{ mr: 5 }}
+						startIcon={<LocalLibraryIcon />}>
+						Genres
 					</Button>
 					<Button
 						variant={path.startsWith("/authors/order-by-page-number") ? "outlined" : "text"}
