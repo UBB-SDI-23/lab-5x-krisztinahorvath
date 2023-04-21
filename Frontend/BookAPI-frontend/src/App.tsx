@@ -22,6 +22,9 @@ import { GenreDetails } from "./components/genres/GenreDetails";
 import { AddGenre } from "./components/genres/AddGenre";
 import { DeleteGenre } from "./components/genres/DeleteGenre";
 import { UpdateGenre } from "./components/genres/UpdateGenre";
+import { DeleteBook } from "./components/books/DeleteBook";
+import { AddBook } from "./components/books/AddBook";
+import { UpdateBook } from "./components/books/UpdateBook";
 
 function App() {
 
@@ -42,7 +45,10 @@ function App() {
 					<Route path="/authors/ordered-authors" element={< SortAuthors/>} />	
 
 					<Route path="/books" element={<ShowAllBooks />} />
-					<Route path="/books/:bookId/details" element={<BookDetails />} />
+					<Route path="/books/add" element={<AddBook />} /> 
+					<Route path="/books/:bookId/details" element={<BookDetails />} />  {/*doesnt work*/}
+					<Route path="/books/:bookId/delete" element={<DeleteBook />} />
+					<Route path="/books/:bookId/edit" element={<UpdateBook />} />   {/*doesnt work*/}
 
 					<Route path="/genres" element={<ShowAllGenres />} />
 					<Route path="/genres/add" element={<AddGenre />} /> 

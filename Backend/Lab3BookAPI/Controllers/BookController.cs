@@ -116,7 +116,7 @@ namespace Lab3BookAPI.Controllers
                          Transcript = g.Key.Transcript,
                          AverageAuthorAge = g.Average(author => DateTime.Now.Year - author.YearOfBirth)
                      }
-                     ).OrderBy(dto => dto.AverageAuthorAge).ToListAsync();
+                     ).Take(100).OrderBy(dto => dto.AverageAuthorAge).ToListAsync();
 
             return b;
         }
@@ -244,6 +244,17 @@ namespace Lab3BookAPI.Controllers
             // return CreatedAtAction("GetBookItem", new { id = bookItem.Id }, bookItem);
 
             return CreatedAtAction(nameof(GetBookAuthor), BookAuthorToDTO(newBookAuthor));
+        }
+
+
+        [HttpGet("autocomplete-genre")]
+        public async Task<ActionResult<IEnumerable<BookDTO>>> AutocompleteGenreName(string query)
+        {
+            var genres = await _context.Genres.Where(t => t.Name.Contains(query))
+                .Take(100)
+                .ToListAsync();
+
+            return Ok(genres);
         }
 
         [HttpPost("{id}/authorsList")]

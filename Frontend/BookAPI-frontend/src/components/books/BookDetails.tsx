@@ -35,11 +35,11 @@ export const BookDetails = () => {
 		<Container>
 			<Card>
 				<CardContent>
-					<IconButton component={Link} sx={{ mr: 3 }} to={`/authors`}>
+					<IconButton component={Link} sx={{ mr: 3 }} to={`/books`}>
 						<ArrowBackIcon />
 					</IconButton>{" "}
 					<h3>Book Details</h3>
-					<p>Title: {bookDet?.book.id}</p>
+					{/* <p>Title: {bookDet?.book.id}</p> */}
                     {/* <p>Year of Birth: {author?.yearOfBirth}</p>
                     <p>Address: {author?.address}</p>
                     <p>Email: {author?.email}</p>

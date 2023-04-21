@@ -96,6 +96,17 @@ namespace Lab3BookAPI.Controllers
         }
 
 
+        //[HttpGet("autocomplete")]
+        //public async Task<ActionResult<IEnumerable<BookDTO>>> AutocompleteName(string query, int genreId, int pageNumber = 1, int pageSize = 100)
+        //{
+        //    var books = await _context.Books.Where(t => t.Title.Contains(query) && t.GenreId != genreId)
+        //        .Skip((pageNumber - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .ToListAsync();
+
+        //    return Ok(books);
+        //}
+
         [HttpPost("{id}/bookList")]
         public async Task<ActionResult<Genre>> PostGenreWithListOfBooks(int id, List<BookDTO> books)
         {

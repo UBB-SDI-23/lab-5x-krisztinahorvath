@@ -106,6 +106,12 @@ export const ShowAllGenres = () => {
 										<IconButton component={Link} sx={{ mr: 3 }} to={`/genres/${genre.id}/delete`}>
 											<DeleteForeverIcon sx={{ color: "red" }} />
 										</IconButton>
+
+                                        {/* <IconButton component={Link} sx={{ mr: 3 }} to={`/genres/${genre.id}/add-books`}>
+                                            <Tooltip title="Add books to genre" arrow>
+                                                <AddIcon color="primary" />
+                                            </Tooltip>
+                                        </IconButton> */}
 									</TableCell>
 								</TableRow>
 							))}
