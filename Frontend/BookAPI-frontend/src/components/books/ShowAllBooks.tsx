@@ -8,7 +8,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
-
+import ViewListIcon from '@mui/icons-material/ViewList';
+import { useLocation } from "react-router-dom";
 
 export const ShowAllBooks = () => {
     const [loading, setLoading] = useState(false);
@@ -47,6 +48,9 @@ export const ShowAllBooks = () => {
 		}
 	}
 
+	const location = useLocation();
+				const path = location.pathname;
+
     return (
 		<Container>
 			<h1>All books</h1>
@@ -59,6 +63,32 @@ export const ShowAllBooks = () => {
 						<AddIcon color="primary" />
 					</Tooltip>
 				</IconButton>
+			)}
+
+			{!loading && (
+				
+				<Button
+					variant={path.startsWith("/books/filter-year") ? "outlined" : "text"}
+					to="/books/filter-year"
+					component={Link}
+					color="inherit"
+					sx={{ mr: 5 }}
+					startIcon={<ViewListIcon />}>
+					Filter
+				</Button> 
+			)}
+
+			{!loading && (
+				
+				<Button
+					variant={path.startsWith("/books/order-by-author-age") ? "outlined" : "text"}
+					to="/books/order-by-author-age"
+					component={Link}
+					color="inherit"
+					sx={{ mr: 5 }}
+					startIcon={<ViewListIcon />}>
+					Books ordered by average author age
+				</Button> 
 			)}
 
 			{!loading && books.length > 0 && (

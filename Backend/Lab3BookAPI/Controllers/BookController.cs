@@ -84,7 +84,7 @@ namespace Lab3BookAPI.Controllers
             {
                 return NotFound();
             }
-            var book = await _context.Books.Where(books => books.Year > year).ToListAsync();
+            var book = await _context.Books.Where(books => books.Year > year).Take(100).ToListAsync();
             return Ok(book);
         }
 
