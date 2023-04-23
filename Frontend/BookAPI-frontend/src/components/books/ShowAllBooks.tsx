@@ -10,17 +10,17 @@ import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { useLocation } from "react-router-dom";
-
+let page = 0;
 export const ShowAllBooks = () => {
     const [loading, setLoading] = useState(false);
     const [books, setBooks] = useState<Book[]>([]);
-    const [page, setPage] = useState(0);
-
+	
     const pageSize = 10;
 
 	const [nrAuthors, setNrAuthors] = useState([]);
 	  
 	useEffect(() => {
+		page = 0;
         setLoading(true);
         fetch(`${BACKEND_URL}/books/count-authors?pageNumber=${page}&pageSize=${pageSize}`)
         .then(response => response.json())
@@ -39,6 +39,7 @@ export const ShowAllBooks = () => {
     } , []);
 
 	const reloadData = () => {
+		console.log(page);
 		setLoading(true);
 		Promise.all([
 			fetch(`${BACKEND_URL}/books/?pageNumber=${page}&pageSize=${pageSize}`).then((response) => response.json()),
@@ -53,15 +54,15 @@ export const ShowAllBooks = () => {
 	
 
     const increasePage=(e: any)=>{
-		setPage(page + 1);
+		page = page + 1;
 		reloadData();
 	}
 
 	const decreasePage=(e:any)=>{
 		if(page >= 1){
-			setPage(page - 1);
-			reloadData();
+			page = page - 1;		
 		}
+		reloadData();
 	}
 
 	const location = useLocation();
@@ -134,10 +135,10 @@ export const ShowAllBooks = () => {
 						</TableHead>
 						<TableBody>
 							{books.map((book, index) => (
-								<TableRow key={book.id}>
+								<TableRow key={page * 10 + index + 1}>
 									 <TableCell component="th" scope="row">
 										{page * 10 + index + 1}
-									</TableCell> 
+									 </TableCell> 
 									<TableCell component="th" scope="row">
 										<Link to={`/books/${book.id}/details`} title="View book details">
 											{book.title}
