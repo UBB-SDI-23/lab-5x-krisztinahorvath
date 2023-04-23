@@ -18,6 +18,17 @@ export const ShowAllBooks = () => {
 
     const pageSize = 10;
 
+	const [nrAuthors, setNrAuthors] = useState([]);
+	  
+	useEffect(() => {
+        setLoading(true);
+        fetch(`${BACKEND_URL}/books/count-authors?pageNumber=${page}&pageSize=${pageSize}`)
+        .then(response => response.json())
+        .then(data => { 
+            setNrAuthors(data); 
+            setLoading(false); });
+    } , []);
+
     useEffect(() => {
         setLoading(true);
         fetch(`${BACKEND_URL}/books`)
@@ -27,14 +38,19 @@ export const ShowAllBooks = () => {
             setLoading(false); });
     } , []);
 
-    const reloadData=()=>{
+	const reloadData = () => {
 		setLoading(true);
-		fetch(`${BACKEND_URL}/books/?pageNumber=${page}&pageSize=${pageSize}`)
-        .then(response => response.json())
-        .then(data => { 
-            setBooks(data); 
-            setLoading(false); });
-	}
+		Promise.all([
+			fetch(`${BACKEND_URL}/books/?pageNumber=${page}&pageSize=${pageSize}`).then((response) => response.json()),
+			fetch(`${BACKEND_URL}/books/count-authors?pageNumber=${page}&pageSize=${pageSize}`).then((response) => response.json())
+		])
+			.then(([data, count]) => {
+				setBooks(data);
+				setNrAuthors(count);
+				setLoading(false);
+			});
+	};
+	
 
     const increasePage=(e: any)=>{
 		setPage(page + 1);
@@ -113,15 +129,15 @@ export const ShowAllBooks = () => {
 								<TableCell align="right">Pages</TableCell>
                                 <TableCell align="right">Price</TableCell>
                                 <TableCell align="right">Transcript</TableCell>
-                                {/* <TableCell align="right">Genre</TableCell> */}
+                            	<TableCell align="right">No of Authors</TableCell> 
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{books.map((book, index) => (
 								<TableRow key={book.id}>
-									<TableCell component="th" scope="row">
+									 <TableCell component="th" scope="row">
 										{page * 10 + index + 1}
-									</TableCell>
+									</TableCell> 
 									<TableCell component="th" scope="row">
 										<Link to={`/books/${book.id}/details`} title="View book details">
 											{book.title}
@@ -132,7 +148,7 @@ export const ShowAllBooks = () => {
                                     <TableCell align="right">{book.pages}</TableCell>
                                     <TableCell align="right">{book.price}</TableCell>
                                     <TableCell align="right">{book.transcript}</TableCell>
-                                    {/* <TableCell align="right">{book.genre.name}</TableCell>  */}
+                                    <TableCell align="right">{nrAuthors.at(index)}</TableCell>
 									<TableCell align="right">
 										<IconButton
 											component={Link}
