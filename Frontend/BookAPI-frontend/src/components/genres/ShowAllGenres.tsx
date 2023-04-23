@@ -9,13 +9,24 @@ import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { Genre } from "../../models/Genre";
 
-
+let page = 0;
 export const ShowAllGenres = () => {
     const [loading, setLoading] = useState(false);
     const [genres, setGenres] = useState<Genre[]>([]);
-    const [page, setPage] = useState(0);
 
     const pageSize = 10;
+
+	const [nrBooks, setNrBooks] = useState([]);
+	  
+	useEffect(() => {
+		page = 0;
+        setLoading(true);
+        fetch(`${BACKEND_URL}/genres/count-books?pageNumber=${page}&pageSize=${pageSize}`)
+        .then(response => response.json())
+        .then(data => { 
+            setNrBooks(data); 
+            setLoading(false); });
+    } , []);
 
     useEffect(() => {
         setLoading(true);
@@ -26,25 +37,30 @@ export const ShowAllGenres = () => {
             setLoading(false); });
     } , []);
 
-    const reloadData=()=>{
+
+	const reloadData = () => {
 		setLoading(true);
-		fetch(`${BACKEND_URL}/genres/?pageNumber=${page}&pageSize=${pageSize}`)
-        .then(response => response.json())
-        .then(data => { 
-            setGenres(data); 
-            setLoading(false); });
-	}
+		Promise.all([
+			fetch(`${BACKEND_URL}/genres/?pageNumber=${page}&pageSize=${pageSize}`).then(response => response.json()),
+			fetch(`${BACKEND_URL}/genres/count-books?pageNumber=${page}&pageSize=${pageSize}`).then(response => response.json())
+		])
+			.then(([data, count]) => {
+				setGenres(data);
+				setNrBooks(count);
+				setLoading(false);
+			});
+	};
 
     const increasePage=(e: any)=>{
-		setPage(page + 1);
+		page = page + 1; 
 		reloadData();
 	}
 
 	const decreasePage=(e:any)=>{
 		if(page >= 1){
-			setPage(page - 1);
-			reloadData();
+			page = page - 1;
 		}
+		reloadData();
 	}
 
     return (
@@ -72,11 +88,12 @@ export const ShowAllGenres = () => {
 								<TableCell align="right">Subgenre</TableCell>
 								<TableCell align="right">Country of Origin</TableCell>
                                 <TableCell align="right">Genre Rating</TableCell>
+								<TableCell align="right">No Of Books</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{genres.map((genre, index) => (
-								<TableRow key={genre.id}>
+								<TableRow key={page * 10 + index + 1}>
 									<TableCell component="th" scope="row">
 										{page * 10 + index + 1}
 									</TableCell>
@@ -89,6 +106,7 @@ export const ShowAllGenres = () => {
 									<TableCell align="right">{genre.subgenre}</TableCell>
                                     <TableCell align="right">{genre.countryOfOrigin}</TableCell>
                                     <TableCell align="right">{genre.genreRating}</TableCell>
+									<TableCell align="right">{nrBooks.at(index)}</TableCell>
                                    	<TableCell align="right">
 										<IconButton
 											component={Link}
@@ -106,12 +124,6 @@ export const ShowAllGenres = () => {
 										<IconButton component={Link} sx={{ mr: 3 }} to={`/genres/${genre.id}/delete`}>
 											<DeleteForeverIcon sx={{ color: "red" }} />
 										</IconButton>
-
-                                        {/* <IconButton component={Link} sx={{ mr: 3 }} to={`/genres/${genre.id}/add-books`}>
-                                            <Tooltip title="Add books to genre" arrow>
-                                                <AddIcon color="primary" />
-                                            </Tooltip>
-                                        </IconButton> */}
 									</TableCell>
 								</TableRow>
 							))}

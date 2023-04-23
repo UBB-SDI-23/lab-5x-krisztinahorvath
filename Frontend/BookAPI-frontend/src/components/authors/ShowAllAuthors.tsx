@@ -8,13 +8,24 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
-
+let page=0;
 export const ShowAllAuthors = () => {
     const [loading, setLoading] = useState(false);
     const [authors, setAuthors] = useState<Author[]>([]);
-    const [page, setPage] = useState(0);
 
 	const pageSize = 10;
+
+	const [nrBooks, setNrBooks] = useState([]);
+	  
+	useEffect(() => {
+		page = 0;
+        setLoading(true);
+        fetch(`${BACKEND_URL}/authors/count-books?pageNumber=${page}&pageSize=${pageSize}`)
+        .then(response => response.json())
+        .then(data => { 
+            setNrBooks(data); 
+            setLoading(false); });
+    } , []);
 
     useEffect(() => {
         setLoading(true);
@@ -25,25 +36,29 @@ export const ShowAllAuthors = () => {
             setLoading(false); });
     } , []);
 
-	const reloadData=()=>{
+	const reloadData = () => {
 		setLoading(true);
-		fetch(`${BACKEND_URL}/authors/?pageNumber=${page}&pageSize=${pageSize}`)
-        .then(response => response.json())
-        .then(data => { 
-            setAuthors(data); 
-            setLoading(false); });
-	}
+		Promise.all([
+			fetch(`${BACKEND_URL}/authors/?pageNumber=${page}&pageSize=${pageSize}`).then(response => response.json()),
+			fetch(`${BACKEND_URL}/authors/count-books?pageNumber=${page}&pageSize=${pageSize}`).then(response => response.json())
+		])
+			.then(([data, count]) => {
+				setAuthors(data);
+				setNrBooks(count);
+				setLoading(false);
+			});
+	};
 
 	const increasePage=(e: any)=>{
-		setPage(page + 1);
+		page = page + 1;
 		reloadData();
 	}
 
 	const decreasePage=(e:any)=>{
 		if(page >= 1){
-			setPage(page - 1);
-			reloadData();
+			page = page - 1;
 		}
+		reloadData();
 	}
 
     return (
@@ -79,11 +94,12 @@ export const ShowAllAuthors = () => {
 								<TableCell align="right">Address</TableCell>
 								<TableCell align="right">Email</TableCell>
                                 <TableCell align="right">Phone Number</TableCell>
+								<TableCell align="right">No of Books</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{authors.map((author, index) => (
-								<TableRow key={author.id}>
+								<TableRow key={page * 10 + index + 1}>
 									<TableCell component="th" scope="row">
 										{page * 10 + index + 1}
 									</TableCell>
@@ -96,6 +112,7 @@ export const ShowAllAuthors = () => {
 									<TableCell align="right">{author.address}</TableCell>
                                     <TableCell align="right">{author.email}</TableCell>
                                     <TableCell align="right">{author.phoneNumber}</TableCell>
+									<TableCell align="right">{nrBooks.at(index)}</TableCell>
 									<TableCell align="right">
 										<IconButton
 											component={Link}

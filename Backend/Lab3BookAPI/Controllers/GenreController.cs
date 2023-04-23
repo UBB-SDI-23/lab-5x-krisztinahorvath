@@ -95,6 +95,23 @@ namespace Lab3BookAPI.Controllers
             return NoContent();
         }
 
+        [HttpGet("count-books")]
+        public async Task<IEnumerable<int>> GetBookCountsForGenres(int pageNumber = 0, int pageSize = 10)
+        {
+            var bookCounts = await (from g in _context.Genres
+                                    join b in _context.Books on g.Id equals b.GenreId into gb
+                                    from book in gb.DefaultIfEmpty()
+                                    group book by g.Id into genreGroup
+                                    orderby genreGroup.Key
+                                    select genreGroup.Count(b => b != null))
+                                    .Skip(pageNumber * pageSize)
+                                    .Take(pageSize)
+                                    .ToListAsync();
+
+            return bookCounts;
+        }
+
+
 
         //[HttpGet("autocomplete")]
         //public async Task<ActionResult<IEnumerable<BookDTO>>> AutocompleteName(string query, int genreId, int pageNumber = 1, int pageSize = 100)
