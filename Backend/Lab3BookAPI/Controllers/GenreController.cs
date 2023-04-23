@@ -1,6 +1,8 @@
 ﻿using Lab3BookAPI.Model;
+using Lab3BookAPI.Validations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -9,10 +11,12 @@ namespace Lab3BookAPI.Controllers
     public class GenreController : ControllerBase
     {
         private readonly BookContext _context;
+        private readonly Validate _validate;
 
-        public GenreController(BookContext context)
+        public GenreController(BookContext context, Validate validate)
         {
             _context = context;
+            _validate = validate;
         }
 
         // GET: api/genre
@@ -175,6 +179,17 @@ namespace Lab3BookAPI.Controllers
             {
                 return Problem("Entity set 'BookContext.Genre'  is null.");
             }
+
+            if (!_validate.IsStringNonEmpty(genreDTO.Name))
+            {
+                return BadRequest("The 'Name' field should be non-empty!");
+            }
+
+            if (!_validate.IsRatingValid(genreDTO.GenreRating))
+            {
+                return BadRequest("The 'Genre Rating' field should be a positive integer between 1 and 10!");
+            }
+
 
             var genre = new Genre
             {

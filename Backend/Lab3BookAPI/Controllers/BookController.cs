@@ -148,7 +148,7 @@ namespace Lab3BookAPI.Controllers
         {
             if (id != bookDTO.Id)
             {
-                return BadRequest();
+                return BadRequest("The book doesn't exist!");
             }
 
             var book = await _context.Books.FindAsync(id);
@@ -158,11 +158,9 @@ namespace Lab3BookAPI.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Genres.FindAsync(bookDTO.GenreId);
-
-            if (genre == null)
+            if (!_validate.IsStringNonEmpty(bookDTO.Title))
             {
-                return BadRequest();
+                return BadRequest("The 'Title' field should be non-empty!");
             }
 
             if (!_validate.IsDateValid(bookDTO.Year))
@@ -174,10 +172,13 @@ namespace Lab3BookAPI.Controllers
             {
                 return BadRequest("The 'GenreId' field should be a positive integer!");
             }
+            
 
-            if (!_validate.IsStringNonEmpty(bookDTO.Title))
+            var genre = await _context.Genres.FindAsync(bookDTO.GenreId);
+
+            if (genre == null)
             {
-                return BadRequest("The 'Title' field should be non-empty!");
+                return BadRequest("The genre doesn't exist!");
             }
 
             book.Title = bookDTO.Title;
@@ -345,11 +346,9 @@ namespace Lab3BookAPI.Controllers
                 return Problem("Entity set 'BookContext.BookItems'  is null.");
             }
 
-            var genre = await _context.Genres.FindAsync(bookDTO.GenreId);
-
-            if (genre == null)
+            if (!_validate.IsStringNonEmpty(bookDTO.Title))
             {
-                return BadRequest();
+                return BadRequest("The 'Title' field should be non-empty!");
             }
 
             if (!_validate.IsDateValid(bookDTO.Year))
@@ -362,10 +361,13 @@ namespace Lab3BookAPI.Controllers
                 return BadRequest("The 'GenreId' field should be a positive integer!");
             }
 
-            if (!_validate.IsStringNonEmpty(bookDTO.Title))
+            var genre = await _context.Genres.FindAsync(bookDTO.GenreId);
+
+            if (genre == null)
             {
-                return BadRequest("The 'Title' field should be non-empty!");
+                return BadRequest("Genre doesn't exist!");
             }
+
 
             var book = new Book
             {

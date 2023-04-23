@@ -19,6 +19,8 @@ import { debounce } from "lodash";
 import { Author } from "../../models/Author";
 import { Book } from "../../models/Book";
 import { Genre } from "../../models/Genre";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const UpdateBook = () => {
     const { bookId } = useParams<{ bookId: string }>();
@@ -45,23 +47,37 @@ export const UpdateBook = () => {
         });
       }, [bookId]);
 
+    const displayError = (message: string) => {
+		toast.error(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	  };	    
+
+	const displaySuccess = (message: string) => {
+		toast.success(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	};	
+
     const updateBook = async (event: { preventDefault: () => void }) => {
         event.preventDefault();
         setLoading(true);
-        fetch(`${BACKEND_URL}/books/${bookId}/`, {
+        fetch(`${BACKEND_URL}/books/${bookId}/`, { // use axios.put
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(book) // modifyied here -> book
+            body: JSON.stringify(book) 
         }).then(response => {
             if (response.ok) {
-                alert("Book updated successfully");
+                displaySuccess("The book was updated successfully!");
             } else {
                 console.error('Error updating book:', response.statusText);
+               displayError(response.statusText);
             }
             navigate(`/books`);
             setLoading(false);
         }).catch(error => {
             console.error('Error updating book:', error);
+            displayError(error);
             setLoading(false);
         });
     }

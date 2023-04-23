@@ -16,6 +16,8 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import axios from "axios";
 import { Genre } from "../../models/Genre";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const AddGenre = () => {
 	const navigate = useNavigate();
@@ -28,13 +30,28 @@ export const AddGenre = () => {
         genreRating: 0
     });
 
+	const displayError = (message: string) => {
+		toast.error(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	  };	  
+
+	const displaySuccess = (message: string) => {
+		toast.success(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	};	 
+
+
 	const addGenre = async (event: { preventDefault: () => void }) => {
 		event.preventDefault();
 		try {
 			await axios.post(`${BACKEND_URL}/genres/`, genre);
+			displaySuccess("The genre was added successfully!");
 			navigate("/genres");
-		} catch (error) {
+		} catch (error: any) {
 			console.log(error);
+			displayError(error.response.data);
 		}
 	};
 

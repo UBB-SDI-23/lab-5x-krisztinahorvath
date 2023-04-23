@@ -28,11 +28,14 @@ import { UpdateBook } from "./components/books/UpdateBook";
 import { BookWithAvgAuthorAge } from "./components/books/BooksStatisticalReport";
 import { FilterBooks } from "./components/books/FilterBooks";
 import { AddAuthorsToBook } from "./components/books/AddAuthorsToBook";
+import { ToastContainer } from "react-toastify";
 
 function App() {
 
   return (
+	
 		<React.Fragment>
+			<ToastContainer />
 			<Router>
 				<AppMenu />
 

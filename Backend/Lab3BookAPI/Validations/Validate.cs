@@ -18,6 +18,11 @@ namespace Lab3BookAPI.Validations
             return year > 1500 && year <= DateTime.Now.Year;
         }
 
+        public bool IsRatingValid(int rating)
+        {
+            return rating >= 1 && rating <= 10;
+        }
+
         public bool IsStringNonEmpty(string value)
         {
             if (value == null)

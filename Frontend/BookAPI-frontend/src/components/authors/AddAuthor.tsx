@@ -17,6 +17,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import axios from "axios";
 import { debounce } from "lodash";
 import { Author } from "../../models/Author";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export const AddAuthor = () => {
 	const navigate = useNavigate();
@@ -52,21 +55,35 @@ export const AddAuthor = () => {
 		};
 	}, [debouncedFetchSuggestions]);
 
-	const addAuthor = async (event: { preventDefault: () => void }) => {
-		event.preventDefault();
-		try {
-			await axios.post(`${BACKEND_URL}/authors/`, author);
-			navigate("/author");
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	const handleInputChange = (event: any, value: any, reason: any) => {
 		console.log("input", value, reason);
 
 		if (reason === "input") {
 			debouncedFetchSuggestions(value);
+		}
+	};
+
+	const displayError = (message: string) => {
+		toast.error(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	  };	  
+
+	const displaySuccess = (message: string) => {
+		toast.success(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	};	 
+
+	const addAuthor = async (event: { preventDefault: () => void }) => {
+		event.preventDefault();
+		try {
+			await axios.post(`${BACKEND_URL}/authors/`, author);
+			displaySuccess("The author was added successfully!");
+			navigate("/authors");
+		} catch (error: any) {
+			console.log(error);
+			displayError(error.response.data);
 		}
 	};
 

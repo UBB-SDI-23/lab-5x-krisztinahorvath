@@ -19,6 +19,8 @@ import { debounce } from "lodash";
 import { Author } from "../../models/Author";
 import { Book } from "../../models/Book";
 import { Genre } from "../../models/Genre";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const AddBook = () => {
 	const navigate = useNavigate();
@@ -56,21 +58,35 @@ export const AddBook = () => {
 		};
 	}, [debouncedFetchSuggestions]);
 
-	const addBook = async (event: { preventDefault: () => void }) => {
-		event.preventDefault();
-		try {
-			await axios.post(`${BACKEND_URL}/books/`, book);
-			navigate("/books");
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	const handleInputChange = (event: any, value: any, reason: any) => {
 		console.log("input", value, reason);
 
 		if (reason === "input") {
 			debouncedFetchSuggestions(value);
+		}
+	};
+
+	const displayError = (message: string) => {
+		toast.error(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	  };	  
+
+	const displaySuccess = (message: string) => {
+		toast.success(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	};	 
+
+	const addBook = async (event: { preventDefault: () => void }) => {
+		event.preventDefault();
+		try {
+			await axios.post(`${BACKEND_URL}/books/`, book);
+			displaySuccess("The book was added successfully!");
+			navigate("/books");
+		} catch (error: any) {
+			console.log(error);
+			displayError(error.response.data);
 		}
 	};
 
