@@ -250,11 +250,21 @@ namespace Lab3BookAPI.Controllers
         [HttpGet("autocomplete-genre")]
         public async Task<ActionResult<IEnumerable<BookDTO>>> AutocompleteGenreName(string query)
         {
-            var genres = await _context.Genres.Where(t => t.Name.Contains(query))
+            var genres = await _context.Genres.Where(t => t.Name.ToLower().Contains(query.ToLower()))
                 .Take(100)
                 .ToListAsync();
 
             return Ok(genres);
+        }
+
+        [HttpGet("autocomplete-book")]
+        public async Task<ActionResult<IEnumerable<Book>>> AutocompleteBookName(string query)
+        {
+            var books = await _context.Books.Where(t => t.Title.ToLower().Contains(query.ToLower()))
+                .Take(100)
+                .ToListAsync();
+
+            return Ok(books);
         }
 
         [HttpPost("{id}/authorsList")]

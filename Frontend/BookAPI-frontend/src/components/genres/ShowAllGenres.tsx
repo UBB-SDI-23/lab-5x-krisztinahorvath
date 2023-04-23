@@ -49,7 +49,7 @@ export const ShowAllGenres = () => {
 
     return (
 		<Container>
-			<h1>All books</h1>
+			<h1>All genres</h1>
 
 			{loading && <CircularProgress />}
 			{!loading && genres.length === 0 && <p>No genres found</p>}

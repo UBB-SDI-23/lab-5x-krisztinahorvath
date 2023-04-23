@@ -66,7 +66,6 @@ export const ShowAllBooks = () => {
 			)}
 
 			{!loading && (
-				
 				<Button
 					variant={path.startsWith("/books/filter-year") ? "outlined" : "text"}
 					to="/books/filter-year"
@@ -79,7 +78,6 @@ export const ShowAllBooks = () => {
 			)}
 
 			{!loading && (
-				
 				<Button
 					variant={path.startsWith("/books/order-by-author-age") ? "outlined" : "text"}
 					to="/books/order-by-author-age"
@@ -88,6 +86,18 @@ export const ShowAllBooks = () => {
 					sx={{ mr: 5 }}
 					startIcon={<ViewListIcon />}>
 					Books ordered by average author age
+				</Button> 
+			)}
+
+			{!loading && (
+				<Button
+					variant={path.startsWith("/books/add-authors") ? "outlined" : "text"}
+					to="/books/add-authors"
+					component={Link}
+					color="inherit"
+					sx={{ mr: 5 }}
+					startIcon={<ViewListIcon />}>
+					Add authors to book
 				</Button> 
 			)}
 

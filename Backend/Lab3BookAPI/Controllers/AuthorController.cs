@@ -54,7 +54,7 @@ namespace Lab3BookAPI.Controllers
         [HttpGet("autocomplete")]
         public async Task<ActionResult<IEnumerable<Author>>> AutocompleteName(string query, int pageNumber=1, int pageSize=100)
         {
-            var names = await _context.Authors.Where(t => t.Name.Contains(query))
+            var names = await _context.Authors.Where(t => t.Name.ToLower().Contains(query.ToLower()))
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

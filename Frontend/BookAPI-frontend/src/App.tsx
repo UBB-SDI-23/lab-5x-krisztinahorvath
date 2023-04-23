@@ -27,6 +27,7 @@ import { AddBook } from "./components/books/AddBook";
 import { UpdateBook } from "./components/books/UpdateBook";
 import { BookWithAvgAuthorAge } from "./components/books/BooksStatisticalReport";
 import { FilterBooks } from "./components/books/FilterBooks";
+import { AddAuthorsToBook } from "./components/books/AddAuthorsToBook";
 
 function App() {
 
@@ -53,7 +54,7 @@ function App() {
 					<Route path="/books/:bookId/edit" element={<UpdateBook />} />   {/*doesnt work*/}
 					<Route path="/books/order-by-author-age" element={<BookWithAvgAuthorAge />} />
 					<Route path="/books/filter-year" element={<FilterBooks />} />
-					
+					<Route path="/books/add-authors" element={<AddAuthorsToBook />} />
 
 					<Route path="/genres" element={<ShowAllGenres />} />
 					<Route path="/genres/add" element={<AddGenre />} /> 
