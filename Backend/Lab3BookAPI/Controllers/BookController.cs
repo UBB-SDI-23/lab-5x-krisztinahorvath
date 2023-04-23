@@ -47,6 +47,27 @@ namespace Lab3BookAPI.Controllers
             return await _context.BookAuthors.Select(x => BookAuthorToDTO(x)).ToListAsync();
         }
 
+        //// GET: api/BookItems/CountAuthors
+        //[HttpGet("CountAuthors")]
+        //public async Task<ActionResult<IEnumerable<int>>> GetAuthorCountsForBooks(int pageNumber = 1, int pageSize = 10)
+        //{
+        //    var bookIds = await _context.Books
+        //        .OrderBy(b => b.Id)
+        //        .Skip((pageNumber - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .Select(b => b.Id)
+        //        .ToListAsync();
+
+        //    var authorCounts = await _context.BookAuthors
+        //        .Where(ba => bookIds.Contains(ba.BookId))
+        //        .GroupBy(ba => ba.BookId)
+        //        .Select(g => new { BookId = g.Key, AuthorCount = g.Count() })
+        //        .ToListAsync();
+
+        //    return authorCounts.Select(ac => ac.AuthorCount);
+        //}
+
+
         // GET: api/BookItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BookWithAuthorDTO>> GetBookItem(int id)

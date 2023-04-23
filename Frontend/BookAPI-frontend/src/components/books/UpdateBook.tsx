@@ -20,7 +20,6 @@ import { Author } from "../../models/Author";
 import { Book } from "../../models/Book";
 import { Genre } from "../../models/Genre";
 
-
 export const UpdateBook = () => {
     const { bookId } = useParams<{ bookId: string }>();
     const navigate = useNavigate();
@@ -34,13 +33,14 @@ export const UpdateBook = () => {
         pages: 0,
         price: 0,
         transcript: "",
-        genreId: 0
+        genreId: 0,
+        genre: {} as Genre
     });
 
     useEffect(() => {
         setLoading(true);
         fetch(`${BACKEND_URL}/books/${bookId}/`).then(response => response.json()).then(data => {
-          setBook(data);
+          setBook(data.books);
           setLoading(false);
         });
       }, [bookId]);
@@ -51,7 +51,7 @@ export const UpdateBook = () => {
         fetch(`${BACKEND_URL}/books/${bookId}/`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(book)
+            body: JSON.stringify(book) // modifyied here -> book
         }).then(response => {
             if (response.ok) {
                 alert("Book updated successfully");
@@ -113,7 +113,6 @@ export const UpdateBook = () => {
                             id="title"
                             label="Title"
                             variant="outlined"
-                            // defaultValue={book.title}
                             value={book.title}
                             onChange={(event) => setBook({...book, title: event.target.value})}
 						/>
@@ -154,7 +153,6 @@ export const UpdateBook = () => {
 						/>
                         <Autocomplete style={{margin: 10}}
                                 id="genreId"
-                                value={book.genre}
                                 options={genreNames}
                                 getOptionLabel={(option) => `${option.name} - ${option.subgenre} - ${option.countryOfOrigin}`}
                                 renderInput={(params) => <TextField {...params} label="Genre" variant="outlined" />}
