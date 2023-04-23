@@ -49,9 +49,9 @@ function App() {
 
 					<Route path="/books" element={<ShowAllBooks />} />
 					<Route path="/books/add" element={<AddBook />} /> 
-					<Route path="/books/:bookId/details" element={<BookDetails />} />  {/*doesnt work*/}
+					<Route path="/books/:bookId/details" element={<BookDetails />} />
 					<Route path="/books/:bookId/delete" element={<DeleteBook />} />
-					<Route path="/books/:bookId/edit" element={<UpdateBook />} />   {/*doesnt work*/}
+					<Route path="/books/:bookId/edit" element={<UpdateBook />} /> 
 					<Route path="/books/order-by-author-age" element={<BookWithAvgAuthorAge />} />
 					<Route path="/books/filter-year" element={<FilterBooks />} />
 					<Route path="/books/add-authors" element={<AddAuthorsToBook />} />

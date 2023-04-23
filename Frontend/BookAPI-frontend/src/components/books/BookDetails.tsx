@@ -11,6 +11,7 @@ import { AuthorWithBookDTO } from "../../models/AuthorWithBookDTO";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Book } from "../../models/Book";
+import { Genre } from "../../models/Genre";
 
 
 interface BookWithAuthorDTO{
@@ -20,13 +21,27 @@ interface BookWithAuthorDTO{
 
 export const BookDetails = () => {
 	const { bookId } = useParams();
-	const [bookDet, setBook] = useState<BookWithAuthorDTO>();
+	
+	const [book, setBook] = useState<Book>({
+        id: parseInt(String(bookId)),
+        title: "",
+        description: "",
+        year: 0,
+        pages: 0,
+        price: 0,
+        transcript: "",
+        genreId: 0,
+        genre: {} as Genre
+    });
+
+	const [authors, setAuthors] = useState<Author[]>([]);
 
 	useEffect(() => {
 		const fetchBook = async () => {
 			const response = await fetch(`${BACKEND_URL}/books/${bookId}`);
-			const book = await response.json();
-			setBook(book);
+			const data = await response.json();
+			setBook(data.books);
+			setAuthors(data.authors);
 		};
 		fetchBook();
 	}, [bookId]);
@@ -39,17 +54,20 @@ export const BookDetails = () => {
 						<ArrowBackIcon />
 					</IconButton>{" "}
 					<h3>Book Details</h3>
-					{/* <p>Title: {bookDet?.book.id}</p> */}
-                    {/* <p>Year of Birth: {author?.yearOfBirth}</p>
-                    <p>Address: {author?.address}</p>
-                    <p>Email: {author?.email}</p>
-                    <p>Phone Number: {author?.phoneNumber}</p>
-                    <p style={{textAlign: "left", marginLeft: "12px"}}>Books:</p>
+					<p>Title: {book.title}</p> 
+                	<p>Description: {book.description}</p>
+                    <p>Year: {book.year}</p>
+                    <p>Pages: {book.pages}</p>
+                    <p>Price: {book.price}</p>
+					<p>Transcript: {book.transcript}</p>
+					<p>Genre: {book.genre?.name}</p>
+					<p>Subgenre: {book.genre?.subgenre}</p>
+                    <p style={{textAlign: "left", marginLeft: "12px"}}>Authors:</p>
                     <ul>
-						{author?.books?.map((book) => (
-                            <li key={book.id}>{book.title}</li>
+						{authors.map(author => (
+							<li key={author.email}>{author.name}</li>
 						))}
-					</ul> */}
+					</ul>
 				</CardContent>
                 <CardActions>
 					<IconButton component={Link} sx={{ mr: 3 }} to={`/books/${bookId}/edit`}>
