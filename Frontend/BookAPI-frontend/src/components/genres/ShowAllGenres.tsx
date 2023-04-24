@@ -8,20 +8,34 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { Genre } from "../../models/Genre";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
-let page = 0;
+let page = 1;
 export const ShowAllGenres = () => {
     const [loading, setLoading] = useState(false);
     const [genres, setGenres] = useState<Genre[]>([]);
 
     const pageSize = 10;
+	const [noOfPages, setNoOfPages] = useState(0);
+
+	useEffect(() => {
+        setLoading(true);
+        fetch(`${BACKEND_URL}/authors/total-number-pages?pageSize=${pageSize}`)
+        .then(response => response.json())
+        .then(data => { 
+            setNoOfPages(parseInt(data));
+			console.log(noOfPages);
+            setLoading(false); });
+    } , []);
+
 
 	const [nrBooks, setNrBooks] = useState([]);
 	  
 	useEffect(() => {
-		page = 0;
+		page = 1;
         setLoading(true);
-        fetch(`${BACKEND_URL}/genres/count-books?pageNumber=${page}&pageSize=${pageSize}`)
+        fetch(`${BACKEND_URL}/genres/count-books?pageNumber=${page-1}&pageSize=${pageSize}`)
         .then(response => response.json())
         .then(data => { 
             setNrBooks(data); 
@@ -41,8 +55,8 @@ export const ShowAllGenres = () => {
 	const reloadData = () => {
 		setLoading(true);
 		Promise.all([
-			fetch(`${BACKEND_URL}/genres/?pageNumber=${page}&pageSize=${pageSize}`).then(response => response.json()),
-			fetch(`${BACKEND_URL}/genres/count-books?pageNumber=${page}&pageSize=${pageSize}`).then(response => response.json())
+			fetch(`${BACKEND_URL}/genres/?pageNumber=${page-1}&pageSize=${pageSize}`).then(response => response.json()),
+			fetch(`${BACKEND_URL}/genres/count-books?pageNumber=${page-1}&pageSize=${pageSize}`).then(response => response.json())
 		])
 			.then(([data, count]) => {
 				setGenres(data);
@@ -51,17 +65,11 @@ export const ShowAllGenres = () => {
 			});
 	};
 
-    const increasePage=(e: any)=>{
-		page = page + 1; 
+	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+		page = value;
 		reloadData();
-	}
+	  };
 
-	const decreasePage=(e:any)=>{
-		if(page >= 1){
-			page = page - 1;
-		}
-		reloadData();
-	}
 
     return (
 		<Container>
@@ -93,9 +101,9 @@ export const ShowAllGenres = () => {
 						</TableHead>
 						<TableBody>
 							{genres.map((genre, index) => (
-								<TableRow key={page * 10 + index + 1}>
+								<TableRow key={(page-1) * 10 + index + 1}>
 									<TableCell component="th" scope="row">
-										{page * 10 + index + 1}
+										{(page-1) * 10 + index + 1}
 									</TableCell>
 									<TableCell component="th" scope="row">
 										<Link to={`/genres/${genre.id}/details`} title="View book details">
@@ -131,8 +139,11 @@ export const ShowAllGenres = () => {
 					</Table>
 				</TableContainer>
 			)}
-			<Button variant="contained" color="secondary" onClick={decreasePage}> Previous </Button>
-			<Button variant="contained" color="secondary" onClick={increasePage}> Next </Button>
+			<Container style={{ backgroundColor: 'white', borderRadius: 10, width: 500}}>
+				<Stack spacing={2}>
+					<Pagination count={noOfPages} page={page} onChange={handlePageChange} size="large" variant="outlined" color="secondary" />
+				</Stack> 
+			</Container>	
 		</Container>
 	);
 }

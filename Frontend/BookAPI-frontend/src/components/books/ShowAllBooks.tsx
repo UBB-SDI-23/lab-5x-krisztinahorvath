@@ -10,19 +10,32 @@ import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { useLocation } from "react-router-dom";
-let page = 0;
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+let page = 1;
 export const ShowAllBooks = () => {
     const [loading, setLoading] = useState(false);
     const [books, setBooks] = useState<Book[]>([]);
 	
     const pageSize = 10;
+		const [noOfPages, setNoOfPages] = useState(0);
+
+	useEffect(() => {
+        setLoading(true);
+        fetch(`${BACKEND_URL}/authors/total-number-pages?pageSize=${pageSize}`)
+        .then(response => response.json())
+        .then(data => { 
+            setNoOfPages(parseInt(data));
+			console.log(noOfPages);
+            setLoading(false); });
+    } , []);
 
 	const [nrAuthors, setNrAuthors] = useState([]);
 	  
 	useEffect(() => {
-		page = 0;
+		page = 1;
         setLoading(true);
-        fetch(`${BACKEND_URL}/books/count-authors?pageNumber=${page}&pageSize=${pageSize}`)
+        fetch(`${BACKEND_URL}/books/count-authors?pageNumber=${page-1}&pageSize=${pageSize}`)
         .then(response => response.json())
         .then(data => { 
             setNrAuthors(data); 
@@ -42,8 +55,8 @@ export const ShowAllBooks = () => {
 		console.log(page);
 		setLoading(true);
 		Promise.all([
-			fetch(`${BACKEND_URL}/books/?pageNumber=${page}&pageSize=${pageSize}`).then((response) => response.json()),
-			fetch(`${BACKEND_URL}/books/count-authors?pageNumber=${page}&pageSize=${pageSize}`).then((response) => response.json())
+			fetch(`${BACKEND_URL}/books/?pageNumber=${page-1}&pageSize=${pageSize}`).then((response) => response.json()),
+			fetch(`${BACKEND_URL}/books/count-authors?pageNumber=${page-1}&pageSize=${pageSize}`).then((response) => response.json())
 		])
 			.then(([data, count]) => {
 				setBooks(data);
@@ -51,19 +64,11 @@ export const ShowAllBooks = () => {
 				setLoading(false);
 			});
 	};
-	
 
-    const increasePage=(e: any)=>{
-		page = page + 1;
+	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+		page = value;
 		reloadData();
-	}
-
-	const decreasePage=(e:any)=>{
-		if(page >= 1){
-			page = page - 1;		
-		}
-		reloadData();
-	}
+	  };
 
 	const location = useLocation();
 				const path = location.pathname;
@@ -135,9 +140,9 @@ export const ShowAllBooks = () => {
 						</TableHead>
 						<TableBody>
 							{books.map((book, index) => (
-								<TableRow key={page * 10 + index + 1}>
+								<TableRow key={(page-1) * 10 + index + 1}>
 									 <TableCell component="th" scope="row">
-										{page * 10 + index + 1}
+									 	{(page-1) * 10 + index + 1}
 									 </TableCell> 
 									<TableCell component="th" scope="row">
 										<Link to={`/books/${book.id}/details`} title="View book details">
@@ -174,8 +179,11 @@ export const ShowAllBooks = () => {
 					</Table>
 				</TableContainer>
 			)}
-			<Button variant="contained" color="secondary" onClick={decreasePage}> Previous </Button>
-			<Button variant="contained" color="secondary" onClick={increasePage}> Next </Button>
+			<Container style={{ backgroundColor: 'white', borderRadius: 10, width: 500}}>
+				<Stack spacing={2}>
+					<Pagination count={noOfPages} page={page} onChange={handlePageChange} size="large" variant="outlined" color="secondary" />
+				</Stack> 
+			</Container>	
 		</Container>
 	);
 }

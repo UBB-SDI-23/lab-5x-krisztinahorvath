@@ -77,6 +77,12 @@ namespace Lab3BookAPI.Controllers
             return authorCounts;
         }
 
+        [HttpGet("total-number-pages")]
+        public async Task<int> GetTotalNrPages(int pageSize = 10)
+        {
+            return await _context.Authors.CountAsync() / pageSize;
+        }
+
         // GET: api/Authors/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AuthorWithBookDTO>> GetAuthor(int id)
