@@ -38,9 +38,15 @@ namespace Lab3BookAPI.Controllers
         [HttpGet("total-number-pages")]
         public async Task<int> GetTotalNrPages(int pageSize = 10)
         {
-
-            return await _context.Genres.CountAsync() / pageSize;
+            int totalGenres = await _context.Genres.CountAsync();
+            int totalPages = totalGenres / pageSize;
+            if (totalGenres % pageSize > 0)
+            {
+                totalPages++;
+            }
+            return totalPages;
         }
+
 
         // GET: api/genre/5
         [HttpGet("{id}")]

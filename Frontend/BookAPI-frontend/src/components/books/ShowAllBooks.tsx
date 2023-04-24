@@ -22,7 +22,7 @@ export const ShowAllBooks = () => {
 
 	useEffect(() => {
         setLoading(true);
-        fetch(`${BACKEND_URL}/authors/total-number-pages?pageSize=${pageSize}`)
+        fetch(`${BACKEND_URL}/books/total-number-pages?pageSize=${pageSize}`)
         .then(response => response.json())
         .then(data => { 
             setNoOfPages(parseInt(data));
