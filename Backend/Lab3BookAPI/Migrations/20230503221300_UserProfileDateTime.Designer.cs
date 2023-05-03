@@ -4,6 +4,7 @@ using Lab3BookAPI.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lab3BookAPI.Migrations
 {
     [DbContext(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    [Migration("20230503221300_UserProfileDateTime")]
+    partial class UserProfileDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,12 +133,7 @@ namespace Lab3BookAPI.Migrations
                     b.Property<string>("Subgenre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Genres");
                 });
@@ -224,17 +222,6 @@ namespace Lab3BookAPI.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("Lab3BookAPI.Model.Genre", b =>
-                {
-                    b.HasOne("Lab3BookAPI.Model.User", "User")
-                        .WithMany("GenresList")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Lab3BookAPI.Model.User", b =>
                 {
                     b.HasOne("Lab3BookAPI.Model.UserProfile", "UserProfile")
@@ -270,11 +257,6 @@ namespace Lab3BookAPI.Migrations
             modelBuilder.Entity("Lab3BookAPI.Model.Genre", b =>
                 {
                     b.Navigation("BookList");
-                });
-
-            modelBuilder.Entity("Lab3BookAPI.Model.User", b =>
-                {
-                    b.Navigation("GenresList");
                 });
 #pragma warning restore 612, 618
         }

@@ -14,5 +14,8 @@
         //public ICollection<Author>  Authors { get; set; } = new HashSet<Author>();
         public float BookRating { get; set; }
         public float AuthorRating { get; set; }
+
+        //public int UserId { get; set; }
+        //public virtual User User { get; set; }
     }
 }
