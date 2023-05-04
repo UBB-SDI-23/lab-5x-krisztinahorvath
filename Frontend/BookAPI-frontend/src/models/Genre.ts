@@ -8,4 +8,7 @@ export interface Genre{
     countryOfOrigin?: string;
     genreRating?: number;
     bookList?: Book[];
+
+    userId?: number;
+    userName?: string;
 }

@@ -45,7 +45,9 @@ namespace Lab3BookAPI.Controllers
             if (_context.Authors == null)
                 return NotFound();
 
-            return await _context.Authors.Skip(pageNumber * pageSize)
+            return await _context.Authors
+                .Include(a => a.User)
+                .Skip(pageNumber * pageSize)
                 .Take(pageSize)
                 .Select(x => AuthorToDTO(x))
                 .ToListAsync();
@@ -299,7 +301,9 @@ namespace Lab3BookAPI.Controllers
                 YearOfBirth = author.YearOfBirth,
                 Address = author.Address,
                 Email = author.Email,
-                PhoneNumber = author.PhoneNumber
+                PhoneNumber = author.PhoneNumber,
+                UserId = author.User.Id,
+                UserName = author.User.Name,
             };
         }
     }

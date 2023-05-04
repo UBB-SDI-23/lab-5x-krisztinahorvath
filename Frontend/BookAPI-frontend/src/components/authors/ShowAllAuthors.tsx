@@ -3,7 +3,7 @@ import { BACKEND_URL } from "../../constants";
 import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { Author } from "../../models/Author";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { Link} from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
@@ -101,6 +101,7 @@ export const ShowAllAuthors = () => {
 								<TableCell align="right">Email</TableCell>
                                 <TableCell align="right">Phone Number</TableCell>
 								<TableCell align="right">No of Books</TableCell>
+								<TableCell align="right">User Name</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -119,6 +120,11 @@ export const ShowAllAuthors = () => {
                                     <TableCell align="right">{author.email}</TableCell>
                                     <TableCell align="right">{author.phoneNumber}</TableCell>
 									<TableCell align="right">{nrBooks.at(index)}</TableCell>
+									<TableCell component="th" scope="row">
+										<Link to={`/users/${author.userId}/details`} title="View user profile">
+											{author.userName}
+										</Link>
+									</TableCell>
 									<TableCell align="right">
 										<IconButton
 											component={Link}

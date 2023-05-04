@@ -29,7 +29,12 @@ namespace BooksAPI
                 builder.Services.AddDbContext<BookContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BooksDatabase")));
             }
             else
-                builder.Services.AddDbContext<BookContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(localConnectionString)));
+                builder.Services.AddDbContext<BookContext>(options =>
+                {
+                    options.UseSqlServer(builder.Configuration.GetConnectionString(localConnectionString),
+                        sqlOptions => sqlOptions.CommandTimeout(120));
+                });
+            // builder.Services.AddDbContext<BookContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(localConnectionString)));
             // builder.Services.AddDbContext<BookContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BooksDatabase")));
 
             // add endpoints

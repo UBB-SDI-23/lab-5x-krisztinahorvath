@@ -30,7 +30,9 @@ namespace Lab3BookAPI.Controllers
             }
 
             //return await _context.Books.Select(x => BookToDTO(x)).ToListAsync();
-            return await _context.Books.Skip(pageNumber * pageSize)
+            return await _context.Books
+                .Include(a => a.User)
+                .Skip(pageNumber * pageSize)
                 .Take(pageSize)
                 .Select(x => BookToDTO(x))
                 .ToListAsync();
@@ -438,7 +440,9 @@ namespace Lab3BookAPI.Controllers
                 Pages = book.Pages,
                 Price = book.Price,
                 GenreId = book.GenreId,
-                Transcript = book.Transcript
+                Transcript = book.Transcript,
+                UserId = book.User.Id,
+                UserName = book.User.Name,
             };
         }
 

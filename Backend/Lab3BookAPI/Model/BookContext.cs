@@ -14,16 +14,25 @@ namespace Lab3BookAPI.Model
 
         public virtual DbSet<BookAuthor> BookAuthors { get; set; } = default!;
 
+        public virtual DbSet<User> Users { get; set; } = default!;
+        public virtual DbSet<UserProfile> UserProfiles { get; set; } = default!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-          
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Name)
+                .IsUnique();
 
             modelBuilder.Entity<Book>()
                 .HasOne(g => g.Genre)
                 .WithMany(b => b.BookList)
                 .HasForeignKey(g => g.GenreId);
 
+            modelBuilder.Entity<Genre>()
+               .HasOne(u => u.User)
+               .WithMany(b => b.GenresList)
+               .HasForeignKey(u => u.UserId);
 
 
             modelBuilder.Entity<BookAuthor>()

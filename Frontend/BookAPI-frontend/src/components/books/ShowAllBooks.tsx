@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../constants";
 import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
@@ -136,6 +136,7 @@ export const ShowAllBooks = () => {
                                 <TableCell align="right">Price</TableCell>
                                 <TableCell align="right">Transcript</TableCell>
                             	<TableCell align="right">No of Authors</TableCell> 
+								<TableCell align="right">User Name</TableCell> 
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -155,6 +156,11 @@ export const ShowAllBooks = () => {
                                     <TableCell align="right">{book.price}</TableCell>
                                     <TableCell align="right">{book.transcript}</TableCell>
                                     <TableCell align="right">{nrAuthors.at(index)}</TableCell>
+									<TableCell component="th" scope="row">
+										<Link to={`/users/${book.userId}/details`} title="View user profile">
+											{book.userName}
+										</Link>
+									</TableCell>
 									<TableCell align="right">
 										<IconButton
 											component={Link}

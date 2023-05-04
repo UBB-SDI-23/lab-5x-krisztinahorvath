@@ -29,7 +29,9 @@ namespace Lab3BookAPI.Controllers
             }
 
             //return await _context.Genres.Select(x => GenreToDTO(x)).ToListAsync();
-            return await _context.Genres.Skip(pageNumber * pageSize)
+            return await _context.Genres
+                .Include(a => a.User)
+                .Skip(pageNumber * pageSize)
                 .Take(pageSize)
                 .Select(x => GenreToDTO(x))
                 .ToListAsync();
@@ -255,7 +257,9 @@ namespace Lab3BookAPI.Controllers
                 Description = genre.Description,
                 Subgenre = genre.Subgenre,
                 CountryOfOrigin = genre.CountryOfOrigin,
-                GenreRating = genre.GenreRating
+                GenreRating = genre.GenreRating,
+                UserId = genre.User.Id,
+                UserName = genre.User.Name,
             };
         }
     }
