@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lab3BookAPI.Migrations
 {
     [DbContext(typeof(BookContext))]
-    [Migration("20230503221508_UserProfileGenre")]
-    partial class UserProfileGenre
+    [Migration("20230504072139_UserBookAuthorFK")]
+    partial class UserBookAuthorFK
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,10 +45,15 @@ namespace Lab3BookAPI.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("YearOfBirth")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Authors");
                 });
@@ -79,12 +84,17 @@ namespace Lab3BookAPI.Migrations
                     b.Property<string>("Transcript")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GenreId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Books");
                 });
@@ -159,15 +169,10 @@ namespace Lab3BookAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserProfileId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("UserProfileId");
 
                     b.ToTable("Users");
                 });
@@ -197,6 +202,17 @@ namespace Lab3BookAPI.Migrations
                     b.ToTable("UserProfiles");
                 });
 
+            modelBuilder.Entity("Lab3BookAPI.Model.Author", b =>
+                {
+                    b.HasOne("Lab3BookAPI.Model.User", "User")
+                        .WithMany("AuthorList")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Lab3BookAPI.Model.Book", b =>
                 {
                     b.HasOne("Lab3BookAPI.Model.Genre", "Genre")
@@ -205,7 +221,15 @@ namespace Lab3BookAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Lab3BookAPI.Model.User", "User")
+                        .WithMany("BookList")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Genre");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Lab3BookAPI.Model.BookAuthor", b =>
@@ -238,21 +262,10 @@ namespace Lab3BookAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Lab3BookAPI.Model.User", b =>
-                {
-                    b.HasOne("Lab3BookAPI.Model.UserProfile", "UserProfile")
-                        .WithMany()
-                        .HasForeignKey("UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserProfile");
-                });
-
             modelBuilder.Entity("Lab3BookAPI.Model.UserProfile", b =>
                 {
                     b.HasOne("Lab3BookAPI.Model.User", "User")
-                        .WithOne()
+                        .WithOne("UserProfile")
                         .HasForeignKey("Lab3BookAPI.Model.UserProfile", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -277,7 +290,14 @@ namespace Lab3BookAPI.Migrations
 
             modelBuilder.Entity("Lab3BookAPI.Model.User", b =>
                 {
+                    b.Navigation("AuthorList");
+
+                    b.Navigation("BookList");
+
                     b.Navigation("GenresList");
+
+                    b.Navigation("UserProfile")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

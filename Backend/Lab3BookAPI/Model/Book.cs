@@ -17,7 +17,7 @@
 
         public virtual ICollection<BookAuthor> BookAuthors { get; set;  }
 
-        //public int UserId { get; set; }
-        //public virtual User User { get; set; }
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

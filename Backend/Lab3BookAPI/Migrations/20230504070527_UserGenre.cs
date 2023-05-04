@@ -5,11 +5,23 @@
 namespace Lab3BookAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class UserProfileGenre : Migration
+    public partial class UserGenre : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_Users_UserProfiles_UserProfileId",
+            //    table: "Users");
+
+            //migrationBuilder.DropIndex(
+            //    name: "IX_Users_UserProfileId",
+            //    table: "Users");
+
+            //migrationBuilder.DropColumn(
+            //    name: "UserProfileId",
+            //    table: "Users");
+
             migrationBuilder.AddColumn<int>(
                 name: "UserId",
                 table: "Genres",
@@ -45,6 +57,26 @@ namespace Lab3BookAPI.Migrations
             migrationBuilder.DropColumn(
                 name: "UserId",
                 table: "Genres");
+
+            migrationBuilder.AddColumn<int>(
+                name: "UserProfileId",
+                table: "Users",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserProfileId",
+                table: "Users",
+                column: "UserProfileId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Users_UserProfiles_UserProfileId",
+                table: "Users",
+                column: "UserProfileId",
+                principalTable: "UserProfiles",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

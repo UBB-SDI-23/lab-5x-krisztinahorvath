@@ -21,5 +21,4 @@ namespace Lab3BookAPI.Model
 
         public virtual User User { get; set; }
     }
-
 }

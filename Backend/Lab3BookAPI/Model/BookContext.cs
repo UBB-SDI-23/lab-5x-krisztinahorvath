@@ -29,6 +29,14 @@ namespace Lab3BookAPI.Model
                 .WithMany(b => b.BookList)
                 .HasForeignKey(g => g.GenreId);
 
+
+            //modelBuilder.Entity<User>()
+            //    .HasMany(u => u.GenresList)
+            //    .WithOne(g => g.User)
+            //    .HasForeignKey(g => g.UserId);
+
+
+
             //modelBuilder.Entity<Book>()
             //    .HasOne(u => u.User)
             //    .WithMany(b => b.BookList)
@@ -49,10 +57,13 @@ namespace Lab3BookAPI.Model
             //   .WithMany(b => b.BookAuthorList)
             //   .HasForeignKey(u => u.UserId);
 
-            modelBuilder.Entity<UserProfile>()
-            .HasOne(u => u.User)
-            .WithOne()
-            .HasForeignKey<UserProfile>(up => up.Id);
+            //    modelBuilder.Entity<UserProfile>()
+            //            .HasKey(up => up.Id);
+
+            //modelBuilder.Entity<UserProfile>()
+            //    .HasOne(u => u.User)
+            //    .WithOne()
+            //    .HasForeignKey<UserProfile>(up => up.Id);
 
 
             modelBuilder.Entity<BookAuthor>()
