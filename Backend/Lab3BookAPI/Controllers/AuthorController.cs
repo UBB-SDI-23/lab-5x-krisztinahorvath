@@ -302,6 +302,7 @@ namespace Lab3BookAPI.Controllers
                 Address = author.Address,
                 Email = author.Email,
                 PhoneNumber = author.PhoneNumber,
+                UserId = author.User.Id,
                 UserName = author.User.Name,
             };
         }

@@ -29,6 +29,7 @@ import { BookWithAvgAuthorAge } from "./components/books/BooksStatisticalReport"
 import { FilterBooks } from "./components/books/FilterBooks";
 import { AddAuthorsToBook } from "./components/books/AddAuthorsToBook";
 import { ToastContainer } from "react-toastify";
+import { UserDetails } from "./components/users/UserDetails";
 
 function App() {
 
@@ -64,6 +65,8 @@ function App() {
 					<Route path="/genres/:genreId/details" element={<GenreDetails />} />
 					<Route path="/genres/:genreId/delete" element={<DeleteGenre />} />
 					<Route path="/genres/:genreId/edit" element={<UpdateGenre />} />
+
+					<Route path="/users/:userId/details" element={<UserDetails />}/>
 				</Routes>
 			</Router>
 		</React.Fragment>

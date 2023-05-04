@@ -12,4 +12,7 @@ export interface Book{
     genre?: Genre;
     transcript: string;
     bookAuthors?: BookAuthor[];
+
+    userId?: number;
+    userName?: string;
 }

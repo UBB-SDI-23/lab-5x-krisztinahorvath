@@ -8,5 +8,6 @@ export interface Author{
     email: string;
     phoneNumber: string;
     bookAuthors?: BookAuthor[];
+    userId?: number;
     userName?: string;
 }

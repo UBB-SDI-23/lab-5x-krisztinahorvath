@@ -7,5 +7,4 @@ export interface UserProfile{
     birthday: Date;
     gender?: string;
     maritalStatus?: string;
-    user?: User;
 }

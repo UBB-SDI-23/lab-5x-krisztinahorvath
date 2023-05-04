@@ -3,7 +3,7 @@ import { BACKEND_URL } from "../../constants";
 import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { Author } from "../../models/Author";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { Link} from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
@@ -121,7 +121,7 @@ export const ShowAllAuthors = () => {
                                     <TableCell align="right">{author.phoneNumber}</TableCell>
 									<TableCell align="right">{nrBooks.at(index)}</TableCell>
 									<TableCell component="th" scope="row">
-										<Link to={`/authors/${author.id}/details`} title="View user profile">
+										<Link to={`/users/${author.userId}/details`} title="View user profile">
 											{author.userName}
 										</Link>
 									</TableCell>

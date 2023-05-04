@@ -64,7 +64,7 @@ namespace Lab3BookAPI.Controllers
     //    return Ok(jwtSecret);
     //}
 
-    [HttpPost("register")]
+        [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<UserDTO>> Register(UserDTO model)
         {
@@ -145,6 +145,36 @@ namespace Lab3BookAPI.Controllers
             return Ok("Account confirmed.");
         }
 
+
+        [HttpGet("user-profile/{id}")]
+        public async Task<ActionResult<UserProfileStatisticsDTO>> GetUserProfileWithStatistics(int id)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserProfile)
+                .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userProfileDTO = new UserProfileStatisticsDTO
+            {
+                Id = id,
+                Name = user.Name,
+                Bio = user.UserProfile.Bio,
+                Location = user.UserProfile.Location,
+                Birthday = user.UserProfile.Birthday,
+                Gender = user.UserProfile.Gender,
+                MaritalStatus = user.UserProfile.MaritalStatus,
+                NrOfBooks = await _context.Books.CountAsync(b => b.UserId == id),
+                NrOfAuthors = await _context.Authors.CountAsync(a => a.UserId == id),
+                NrOfGenres = await _context.Genres.CountAsync(g => g.UserId == id)
+            };
+
+            return Ok(userProfileDTO);
+        }
+
         // POST /api/login
         [HttpPost("login")]
         [AllowAnonymous]
@@ -153,6 +183,7 @@ namespace Lab3BookAPI.Controllers
             // Find user by username and password
             User user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Name == model.Name && u.Password == HashPassword(model.Password));
+
             if (user == null)
             {
                 return Unauthorized("Invalid username or password.");
@@ -185,9 +216,9 @@ namespace Lab3BookAPI.Controllers
         {
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-        new Claim(JwtRegisteredClaimNames.UniqueName, user.Name)
-         };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Name)
+             };
 
             // Get JWT secret from configuration
             string jwtSecret = _config["Jwt:Secret"];

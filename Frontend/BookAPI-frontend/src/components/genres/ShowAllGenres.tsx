@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../constants";
 import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
@@ -97,6 +97,7 @@ export const ShowAllGenres = () => {
 								<TableCell align="right">Country of Origin</TableCell>
                                 <TableCell align="right">Genre Rating</TableCell>
 								<TableCell align="right">No Of Books</TableCell>
+								<TableCell align="right">User Name</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -115,6 +116,11 @@ export const ShowAllGenres = () => {
                                     <TableCell align="right">{genre.countryOfOrigin}</TableCell>
                                     <TableCell align="right">{genre.genreRating}</TableCell>
 									<TableCell align="right">{nrBooks.at(index)}</TableCell>
+									<TableCell component="th" scope="row">
+										<Link to={`/users/${genre.userId}/details`} title="View user profile">
+											{genre.userName}
+										</Link>
+									</TableCell>
                                    	<TableCell align="right">
 										<IconButton
 											component={Link}
