@@ -101,6 +101,7 @@ export const ShowAllAuthors = () => {
 								<TableCell align="right">Email</TableCell>
                                 <TableCell align="right">Phone Number</TableCell>
 								<TableCell align="right">No of Books</TableCell>
+								<TableCell align="right">User Name</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -119,6 +120,11 @@ export const ShowAllAuthors = () => {
                                     <TableCell align="right">{author.email}</TableCell>
                                     <TableCell align="right">{author.phoneNumber}</TableCell>
 									<TableCell align="right">{nrBooks.at(index)}</TableCell>
+									<TableCell component="th" scope="row">
+										<Link to={`/authors/${author.id}/details`} title="View user profile">
+											{author.userName}
+										</Link>
+									</TableCell>
 									<TableCell align="right">
 										<IconButton
 											component={Link}

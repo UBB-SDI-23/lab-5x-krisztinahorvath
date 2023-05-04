@@ -13,7 +13,7 @@ namespace Lab3BookAPI.Model
 
         public string? Location { get; set; }
 
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         public string? Gender { get; set; }
 
