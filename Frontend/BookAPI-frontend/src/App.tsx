@@ -30,6 +30,8 @@ import { FilterBooks } from "./components/books/FilterBooks";
 import { AddAuthorsToBook } from "./components/books/AddAuthorsToBook";
 import { ToastContainer } from "react-toastify";
 import { UserDetails } from "./components/users/UserDetails";
+import { UserLogin } from "./components/users/UserLogin";
+import { ConfirmCode, DisplayConfirmationCode, UserRegister } from "./components/users/UserRegister";
 
 function App() {
 
@@ -67,6 +69,12 @@ function App() {
 					<Route path="/genres/:genreId/edit" element={<UpdateGenre />} />
 
 					<Route path="/users/:userId/details" element={<UserDetails />}/>
+					<Route path="/login" element={<UserLogin />}/>
+					
+					<Route path="/register" element={<UserRegister />}/>
+					<Route path="/register/:confirmationCode/show-confirm-code" element={<DisplayConfirmationCode />} />
+					<Route path="/register/confirm/:confirmationCode" element={<ConfirmCode />} />
+					
 				</Routes>
 			</Router>
 		</React.Fragment>

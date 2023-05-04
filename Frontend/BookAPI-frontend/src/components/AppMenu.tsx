@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import PersonIcon from '@mui/icons-material/Person';
 
 export const AppMenu = () => {
     const location = useLocation();
@@ -62,6 +63,26 @@ export const AppMenu = () => {
 						sx={{ mr: 5 }}
 						startIcon={<ViewListIcon />}>
 						Authors With Average Book Length
+					</Button> 
+
+					<Button
+						variant={path.startsWith("/login") ? "outlined" : "text"}
+						to="/login"
+						component={Link}
+						color="inherit"
+						sx={{ mr: 5 }}
+						startIcon={<PersonIcon />}>
+						Login
+					</Button> 
+
+					<Button
+						variant={path.startsWith("/register") ? "outlined" : "text"}
+						to="/register"
+						component={Link}
+						color="inherit"
+						sx={{ mr: 5 }}
+						startIcon={<PersonIcon />}>
+						Register
 					</Button> 
 				</Toolbar>
 			</AppBar>
