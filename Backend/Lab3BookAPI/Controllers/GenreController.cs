@@ -1,5 +1,6 @@
 ﻿using Lab3BookAPI.Model;
 using Lab3BookAPI.Validations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,7 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/genre
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres(int pageNumber = 0, int pageSize = 10)
         {
             if (_context.Genres == null)
@@ -38,6 +40,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("total-number-pages")]
+        [AllowAnonymous]
         public async Task<int> GetTotalNrPages(int pageSize = 10)
         {
             int totalGenres = await _context.Genres.CountAsync();
@@ -52,6 +55,7 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/genre/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Genre>> GetGenre(int id)
         {
             if (_context.Genres == null)
@@ -115,6 +119,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("count-books")]
+        [AllowAnonymous]
         public async Task<IEnumerable<int>> GetBookCountsForGenres(int pageNumber = 0, int pageSize = 10)
         {
             var bookCounts = await (from g in _context.Genres

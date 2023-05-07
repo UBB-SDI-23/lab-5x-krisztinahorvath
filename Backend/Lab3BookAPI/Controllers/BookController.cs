@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using Lab3BookAPI.Validations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -22,6 +23,7 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/BookItems
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<BookDTO>>> GetBookItems(int pageNumber = 0, int pageSize = 10)
         {
             if (_context.Books == null)
@@ -39,6 +41,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("total-number-pages")]
+        [AllowAnonymous]
         public async Task<int> GetTotalNrPages(int pageSize = 10)
         {
             int totalBooks = await _context.Books.CountAsync();
@@ -51,6 +54,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("bookAuthor")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<BookAuthorDTO>>> GetBookAuthor()
         {
             if (_context.BookAuthors == null)
@@ -62,6 +66,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("count-authors")]
+        [AllowAnonymous]
         public async Task<IEnumerable<int>> GetAuthorCountsForBooks(int pageNumber = 0, int pageSize = 10)
         {
             var authorCounts = await _context.BookAuthors
@@ -79,6 +84,7 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/BookItems/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<BookWithAuthorDTO>> GetBookItem(int id)
         {
             if (_context.Books == null)
@@ -108,6 +114,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("filter/{year}")]
+        [AllowAnonymous]
         public async Task<IActionResult> FilterByYear(int year)
         {
             if (_context.Books == null)
@@ -119,6 +126,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("get/orderedAuthors")]
+        [AllowAnonymous]
         public async Task<List<BookWithAverageAuthorAgeDTO>> GetBookWithAverageAuthorAge()
         {
             //if (_context.Books == null)
@@ -279,6 +287,7 @@ namespace Lab3BookAPI.Controllers
 
 
         [HttpGet("autocomplete-genre")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<BookDTO>>> AutocompleteGenreName(string query)
         {
             var genres = await _context.Genres.Where(t => t.Name.ToLower().Contains(query.ToLower()))
@@ -289,6 +298,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("autocomplete-book")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Book>>> AutocompleteBookName(string query)
         {
             var books = await _context.Books.Where(t => t.Title.ToLower().Contains(query.ToLower()))

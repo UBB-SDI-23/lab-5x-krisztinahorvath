@@ -16,6 +16,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
+using System.IdentityModel.Tokens.Jwt;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using NuGet.Common;
+
 
 namespace Lab3BookAPI.Controllers
 {
@@ -24,14 +41,16 @@ namespace Lab3BookAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly BookContext _context;
-        private readonly IConfiguration _config;
+        private readonly JwtSettings _jwtSettings;
         private readonly Validate _validate;
+        private readonly IConfiguration _config;
 
-        public UsersController(BookContext context, IConfiguration config, Validate validate)
+        public UsersController(BookContext context, IOptions<JwtSettings> jwtSettings, Validate validate, IConfiguration config)
         {
             _context = context;
-            _config = config;
+            _jwtSettings = jwtSettings.Value;
             _validate = validate;
+            _config = config;
         }
 
         // GET: api/users
@@ -147,6 +166,7 @@ namespace Lab3BookAPI.Controllers
 
 
         [HttpGet("user-profile/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<UserProfileStatisticsDTO>> GetUserProfileWithStatistics(int id)
         {
             var user = await _context.Users
@@ -267,6 +287,29 @@ namespace Lab3BookAPI.Controllers
                 return sb.ToString();
             }
         }
+        //private static string HashPassword(string password)
+        //{
+        //    byte[] hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
+        //    return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        //}
+
+       //private string GenerateJwtToken(User user)
+        //{
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(new[]
+        //        {
+        //            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        //            new Claim(ClaimTypes.Role, user.AccessLevel.ToString())
+        //        }),
+        //        Expires = DateTime.UtcNow.AddHours(2),
+        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        //    };
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+        //    return tokenHandler.WriteToken(token);
+        //}
 
         private static UserDTO UserToDTO(User user)
         {
