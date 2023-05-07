@@ -260,13 +260,6 @@ namespace Lab3BookAPI.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        // Helper method to check if a password is strong enough
-        //private bool IsPasswordValid(string password)
-        //{
-        //    // Implement your own validation rules here
-        //    return password.Length >= 8 && password.Any(char.IsUpper) && password.Any(char.IsDigit);
-        //}
-
         public static string HashPassword(string password)
         {
             // Convert password to bytes
