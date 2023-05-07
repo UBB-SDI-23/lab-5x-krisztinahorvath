@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Lab3BookAPI.Validations;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -22,6 +23,7 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/Authors
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthor(int pageNumber = 0, int pageSize = 10)
         {
             //var authors = _context.Authors.AsQueryable();
@@ -54,6 +56,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("autocomplete")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Author>>> AutocompleteName(string query, int pageNumber=1, int pageSize=100)
         {
             var names = await _context.Authors.Where(t => t.Name.ToLower().Contains(query.ToLower()))
@@ -65,6 +68,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("count-books")]
+        [AllowAnonymous]
         public async Task<IEnumerable<int>> GetBookCountsForAuthors(int pageNumber = 0, int pageSize = 10)
         {
             var authorCounts = await _context.BookAuthors
@@ -80,6 +84,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("total-number-pages")]
+        [AllowAnonymous]
         public async Task<int> GetTotalNrPages(int pageSize = 10)
         {
             int totalAuthors = await _context.Authors.CountAsync();
@@ -93,6 +98,7 @@ namespace Lab3BookAPI.Controllers
 
         // GET: api/Authors/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<AuthorWithBookDTO>> GetAuthor(int id)
         {
             if (_context.Authors == null)
@@ -129,6 +135,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpGet("get/orderedBooks")]
+        [AllowAnonymous]
         public async Task<List<AuthorAvgBookLengthDTO>> GetAuthorWithAverageBookLength()
         {
             //if (_context.Books == null)
@@ -269,6 +276,7 @@ namespace Lab3BookAPI.Controllers
 
         // DELETE: api/Authors/5
         [HttpDelete("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
             //if (_context.Author == null)
