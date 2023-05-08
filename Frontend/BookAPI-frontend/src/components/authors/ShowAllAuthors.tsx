@@ -3,13 +3,15 @@ import { BACKEND_URL } from "../../constants";
 import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { Author } from "../../models/Author";
-import { Link} from "react-router-dom";
+import { Link, useLocation} from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import ViewListIcon from '@mui/icons-material/ViewList';
+
 let page = 1;
 export const ShowAllAuthors = () => {
     const [loading, setLoading] = useState(false);
@@ -67,6 +69,9 @@ export const ShowAllAuthors = () => {
 		reloadData();
 	  };
 
+	  const location = useLocation();
+	  const path = location.pathname;
+
     return (
 		<Container>
 			<h1>All authors</h1>
@@ -88,6 +93,17 @@ export const ShowAllAuthors = () => {
 					</Tooltip>
 				</IconButton>
 			)}
+
+			{!loading && (
+			<Button
+				variant={path.startsWith("/authors/order-by-page-number") ? "outlined" : "text"}
+				to="/authors/order-by-page-number"
+				component={Link}
+				color="inherit"
+				sx={{ mr: 5 }}
+				startIcon={<ViewListIcon />}>
+				Authors With Average Book Length
+			</Button> )}
 
 			{!loading && authors.length > 0 && (
 				<TableContainer component={Paper}>

@@ -2,6 +2,14 @@
 
 namespace Lab3BookAPI.Model
 {
+    public enum Role
+    {
+        Unconfirmed, 
+        Regular, 
+        Moderator, 
+        Admin
+    }
+
     public class User
     {
         public int Id { get; set; }
@@ -17,5 +25,6 @@ namespace Lab3BookAPI.Model
         public virtual ICollection<Genre>? GenresList { get; set; }
         //public virtual ICollection<BookAuthor>? BookAuthorList { get; set; }
         public virtual UserProfile UserProfile { get; set; }
+        public virtual Role? Role { get; set; }
     }
 }

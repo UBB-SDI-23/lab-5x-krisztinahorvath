@@ -4,12 +4,15 @@ import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import AddIcon from '@mui/icons-material/Add';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import ViewListIcon from '@mui/icons-material/ViewList';
 import PersonIcon from '@mui/icons-material/Person';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { getAuthToken } from "../auth";
 
 export const AppMenu = () => {
     const location = useLocation();
 	const path = location.pathname;
+	const isAuthenticated = Boolean(getAuthToken());
 
 	return (
 		<Box sx={{ flexGrow: 1 }}>
@@ -46,6 +49,7 @@ export const AppMenu = () => {
 						startIcon={<LocalLibraryIcon />}>
 						Books
 					</Button>
+
 					<Button
 						variant={path.startsWith("/genres") ? "outlined" : "text"}
 						to="/genres"
@@ -55,35 +59,40 @@ export const AppMenu = () => {
 						startIcon={<LocalLibraryIcon />}>
 						Genres
 					</Button>
-					<Button
-						variant={path.startsWith("/authors/order-by-page-number") ? "outlined" : "text"}
-						to="/authors/order-by-page-number"
-						component={Link}
-						color="inherit"
-						sx={{ mr: 5 }}
-						startIcon={<ViewListIcon />}>
-						Authors With Average Book Length
-					</Button> 
 
-					<Button
-						variant={path.startsWith("/login") ? "outlined" : "text"}
-						to="/login"
-						component={Link}
-						color="inherit"
-						sx={{ mr: 5 }}
-						startIcon={<PersonIcon />}>
-						Login
-					</Button> 
-
+					{!isAuthenticated && 
+						<Button
+							variant={path.startsWith("/login") ? "outlined" : "text"}
+							to="/login"
+							component={Link}
+							color="inherit"
+							sx={{ mr: 5 }}
+							startIcon={<PersonIcon />}>
+							Login
+						</Button> 
+					} 
 					<Button
 						variant={path.startsWith("/register") ? "outlined" : "text"}
 						to="/register"
 						component={Link}
 						color="inherit"
 						sx={{ mr: 5 }}
-						startIcon={<PersonIcon />}>
+						startIcon={<HowToRegIcon />}>
 						Register
 					</Button> 
+
+					{isAuthenticated && 
+						<Button
+						variant={path.startsWith("/logout") ? "outlined" : "text"}
+						to="/logout"
+						component={Link}
+						color="inherit"
+						sx={{ mr: 5 }}
+						startIcon={<LogoutIcon />}>
+						Logout
+					</Button> 
+					}
+					
 				</Toolbar>
 			</AppBar>
 		</Box>

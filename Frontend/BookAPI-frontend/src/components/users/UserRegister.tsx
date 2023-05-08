@@ -73,7 +73,7 @@ export const UserRegister = () => {
                         onChange={(event) => setPassword(event.target.value)}
                     />
 
-                    <Button type="submit">Login</Button>
+                    <Button type="submit">Register</Button>
                 </form>
             </CardContent>
             <CardActions></CardActions>

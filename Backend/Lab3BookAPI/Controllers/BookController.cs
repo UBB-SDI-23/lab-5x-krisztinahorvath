@@ -157,11 +157,7 @@ namespace Lab3BookAPI.Controllers
                      ).Take(100).OrderBy(dto => dto.AverageAuthorAge).ToListAsync();
 
             return b;
-        }
-
-        
-        
-    
+        }    
 
         // PUT: api/BookItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
