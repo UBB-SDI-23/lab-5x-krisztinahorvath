@@ -11,13 +11,16 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import { PagePreference } from "../users/UserDetails";
 
 let page = 1;
 export const ShowAllAuthors = () => {
     const [loading, setLoading] = useState(false);
     const [authors, setAuthors] = useState<Author[]>([]);
 
-	const pageSize = 10;
+	let [pageSize, setPageSize] = useState(10);
+	// let pageSize = 10;
+
 	const [noOfPages, setNoOfPages] = useState(0);
 
 	useEffect(() => {
@@ -75,7 +78,6 @@ export const ShowAllAuthors = () => {
     return (
 		<Container>
 			<h1>All authors</h1>
-
 			{loading && <CircularProgress />}
 			{!loading && authors.length === 0 && <p>No authors found</p>}
 			{!loading && (

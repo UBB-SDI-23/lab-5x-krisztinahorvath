@@ -5,6 +5,7 @@ using Lab3BookAPI.Validations;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -26,33 +27,23 @@ namespace Lab3BookAPI.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthor(int pageNumber = 0, int pageSize = 10)
         {
-            //var authors = _context.Authors.AsQueryable();
-
-            //if (authors == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var totalAuthors = await authors.CountAsync();
-
-            //if (pageNumber.HasValue && pageSize.HasValue)
-            //{
-            //    authors = authors.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
-            //}
-
-            //Response.Headers.Add("X-Total-Count", totalAuthors.ToString());
-
-            //return await authors.Select(x => AuthorToDTO(x)).ToListAsync();
-
             if (_context.Authors == null)
                 return NotFound();
 
-            return await _context.Authors
+            pageSize = _pageSize;
+
+            Console.WriteLine($"pageSize={pageSize}");
+
+            var authors = await _context.Authors
                 .Include(a => a.User)
                 .Skip(pageNumber * pageSize)
                 .Take(pageSize)
                 .Select(x => AuthorToDTO(x))
                 .ToListAsync();
+
+            Response.Headers.Add("X-Total-Count", authors.Count.ToString());
+
+            return authors;
         }
 
         [HttpGet("autocomplete")]
@@ -168,6 +159,17 @@ namespace Lab3BookAPI.Controllers
 
             return b;
         }
+        private static int _pageSize = 10;
+
+        [HttpPost("pageSizeChange")]
+        [AllowAnonymous]
+        public IActionResult PostPageSize(int pageSize)
+        {
+            _pageSize = pageSize;
+
+            return Ok();
+        }
+
 
         // PUT: api/Authors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

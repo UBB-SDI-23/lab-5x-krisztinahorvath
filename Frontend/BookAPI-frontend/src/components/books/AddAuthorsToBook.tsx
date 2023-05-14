@@ -16,6 +16,8 @@ import axios from "axios";
 import { debounce } from "lodash";
 import { Author } from "../../models/Author";
 import { Book } from "../../models/Book";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface BookWithAuthorDTO{
     bookId?: number;
@@ -99,13 +101,30 @@ export const AddAuthorsToBook = () => {
 		}
 	};
 
+	const displayError = (message: string) => {
+		toast.error(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	  };	  
+
+	const displaySuccess = (message: string) => {
+		toast.success(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	};	
+
 	const addBookAuthor = async (event: { preventDefault: () => void }) => {
 		event.preventDefault();
 		try {
 			await axios.post(`${BACKEND_URL}/books/${bookAuthor?.bookId}/authorsList/`, bookAuthor);
 			navigate("/books");
-		} catch (error) {
+		} catch (error: any) {
 			console.log(error);
+			if (error.response.status === 401) {
+				displayError("You don't have permission to do this action it!");
+			  } else {
+				displayError(error.response.data);
+			  }
 		}
 	};
 

@@ -7,7 +7,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../constants";
 import { Author } from "../../models/Author";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const UpdateAuthor = () => {
     const { authorId } = useParams<{ authorId: string }>();
@@ -23,6 +24,18 @@ export const UpdateAuthor = () => {
         phoneNumber: "",
         bookAuthors: []
     });
+
+    const displayError = (message: string) => {
+		toast.error(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	  };	  
+
+	const displaySuccess = (message: string) => {
+		toast.success(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	};	 
 
     useEffect(() => {
         setLoading(true);
@@ -43,6 +56,9 @@ export const UpdateAuthor = () => {
             if (response.ok) {
                 alert("Author updated successfully");
             } else {
+                if (response.status === 401) {
+                    displayError("You don't have permission to do this action it!");
+                  } 
                 console.error('Error updating author:', response.statusText);
             }
             navigate(`/authors`);

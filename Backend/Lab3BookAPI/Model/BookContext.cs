@@ -17,6 +17,8 @@ namespace Lab3BookAPI.Model
         public virtual DbSet<User> Users { get; set; } = default!;
         public virtual DbSet<UserProfile> UserProfiles { get; set; } = default!;
 
+        public virtual int PageNr { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

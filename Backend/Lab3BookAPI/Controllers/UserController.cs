@@ -38,6 +38,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
+//using Microsoft.AspNetCore.Components;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -50,10 +51,10 @@ namespace Lab3BookAPI.Controllers
         private readonly Validate _validate;
         private readonly IConfiguration _config;
 
-        public UsersController(BookContext context, IOptions<JwtSettings> jwtSettings, Validate validate, IConfiguration config)
+        public UsersController(BookContext context, JwtSettings jwtSettings, Validate validate, IConfiguration config)
         {
             _context = context;
-            _jwtSettings = jwtSettings.Value;
+            _jwtSettings = jwtSettings;
             _validate = validate;
             _config = config;
         }
@@ -83,10 +84,10 @@ namespace Lab3BookAPI.Controllers
             }
 
             // Validate password
-            //if (!IsPasswordValid(model.Password))
-            //{
-            //    return BadRequest("Password is not strong enough.");
-            //}
+            if (!_validate.IsPasswordValid(model.Password))
+            {
+                return BadRequest("Password is not strong enough.");
+            }
 
             // Generate confirmation code
             string confirmationCode = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
@@ -185,6 +186,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpPost("bulk-delete")]
+        [Authorize(Policy = "AdminUser")]
         public async Task<IActionResult> BulkDelete()
         {
             // Delete all entities from the database
@@ -200,6 +202,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpPost("generate-data")]
+        [Authorize(Policy = "AdminUser")]
         public async Task<IActionResult> GenerateData()
         {
             var connectionString = _config.GetConnectionString("LocalBooksDatabase");
@@ -241,7 +244,7 @@ namespace Lab3BookAPI.Controllers
             }
 
             // Generate JWT token
-            string token = GenerateJwtToken(user);
+            string token = GenerateJwtToken(user, _jwtSettings);
 
             return Ok(new { token });
         }
@@ -254,30 +257,22 @@ namespace Lab3BookAPI.Controllers
             return confirmationCode;
         }
 
-
-
         // Helper method to generate a JWT token
-        private string GenerateJwtToken(User user)
+        private string GenerateJwtToken(User user, JwtSettings jwtSettings)
         {
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.Name)
-             };
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Name),
+                new Claim("role", user.Role.ToString())
+            };
 
-            // Get JWT secret from configuration
-            string jwtSecret = _config["Jwt:Secret"];
-            if (string.IsNullOrEmpty(jwtSecret))
-            {
-                throw new InvalidOperationException("JWT secret is not configured.");
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
+                issuer: jwtSettings.Issuer,
+                audience: jwtSettings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: creds);

@@ -3,17 +3,47 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import axios from "axios";
 import { BACKEND_URL } from "../../constants";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { getAuthToken } from "../../auth";
 
 export const DeleteBook = () => {
 	const { bookId } = useParams();
-	const navigate = useNavigate();
+	const navigate = useNavigate();	
+	const displayError = (message: string) => {
+		toast.error(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	  };	  
+
+	const displaySuccess = (message: string) => {
+		toast.success(message, {
+		  position: toast.POSITION.TOP_CENTER,
+		});
+	};
 
 	const handleDelete = async (event: { preventDefault: () => void }) => {
 		event.preventDefault();
-		await axios.delete(`${BACKEND_URL}/books/${bookId}`);
+	  
+		try {
+		  const authToken = getAuthToken();
+		  await axios.delete(`${BACKEND_URL}/books/${bookId}`, {
+			headers: {
+			  Authorization: `Bearer ${authToken}`,
+			},
+		  });
+		} catch (error: any) {
+			console.log(error);
+		  if (error.response.status === 401) {
+			//displayError("You don't have permission to do this action it!");
+			//} else {
+			displayError(error.response.data);
+			
+		  }
+		}
 		// go to courses list
 		navigate("/books");
-	};
+	  };
 
 	const handleCancel = (event: { preventDefault: () => void }) => {
 		event.preventDefault();

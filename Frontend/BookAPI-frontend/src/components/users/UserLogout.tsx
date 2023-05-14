@@ -24,7 +24,7 @@ export const UserLogout = () => {
 
 	const handleLogout = async (event: { preventDefault: () => void }) => {
 		event.preventDefault();
-        displaySuccess("You logged out succesffully!");
+        displaySuccess("You logged out successfully!");
 		logOut();
 		navigate("/");
 	};

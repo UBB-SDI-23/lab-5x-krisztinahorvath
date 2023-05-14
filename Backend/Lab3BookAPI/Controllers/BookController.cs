@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using Lab3BookAPI.Validations;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -162,6 +163,7 @@ namespace Lab3BookAPI.Controllers
         // PUT: api/BookItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Policy = "AllLoggedUsers")]
         public async Task<IActionResult> PutBookItem(int id, BookDTO bookDTO)
         {
             if (id != bookDTO.Id)
@@ -231,6 +233,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpPost("{id}/authors")]
+        [Authorize(Policy = "AllLoggedUsers")]
         public async Task<ActionResult<BookAuthorDTO>> PostBookWithAuthor(int id, BookAuthorDTO bookAuthorDTO)   
         {
             if (_context.Books == null)
@@ -305,6 +308,7 @@ namespace Lab3BookAPI.Controllers
         }
 
         [HttpPost("{id}/authorsList")]
+        [Authorize(Policy = "AllLoggedUsers")]
         public async Task<ActionResult<BookAuthorDTO>> PostBookWithListOfAuthor(int id, BookAuthorListDTO bookAuthorDTO)
         {
             if (_context.Books == null)
@@ -359,6 +363,7 @@ namespace Lab3BookAPI.Controllers
         // POST: api/BookItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Policy = "AllLoggedUsers")]
         public async Task<ActionResult<BookDTO>> PostBookItem(BookDTO bookDTO)
         {
             if (_context.Books == null)
@@ -412,19 +417,31 @@ namespace Lab3BookAPI.Controllers
 
         // DELETE: api/BookItems/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AllLoggedUsers")]
         public async Task<IActionResult> DeleteBookItem(int id)
         {
-            if (_context.Books == null)
-            {
-                return NotFound();
-            }
             var bookItem = await _context.Books.FindAsync(id);
             if (bookItem == null)
             {
                 return NotFound();
             }
 
-            _context.Books.Remove(bookItem);
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+            if (userIdClaim == null)
+            {
+                return Forbid("id=" + userIdClaim);
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+            var isRegularUser = User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == Role.Regular.ToString());
+            var isModeratorOrAdmin = User.HasClaim(c => c.Type == ClaimTypes.Role && (c.Value == Role.Moderator.ToString() || c.Value == Role.Admin.ToString()));
+
+            if (!isModeratorOrAdmin && (isRegularUser && bookItem.UserId != userId))
+            {
+                return Forbid("role=" + isRegularUser);
+            }
+
+                _context.Books.Remove(bookItem);
             await _context.SaveChangesAsync();
 
             return NoContent();

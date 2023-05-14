@@ -3,7 +3,14 @@ import { Book } from "./Book";
 import { Genre } from "./Genre";
 import { UserProfile } from "./UserProfile";
 
-export interface User{
+export enum Role {
+    Unconfirmed = 0,
+    Regular = 1,
+    Moderator = 2,
+    Admin = 3,
+  }
+  
+  export interface User {
     id?: number;
     name?: string;
     password?: string;
@@ -11,4 +18,5 @@ export interface User{
     genreList?: Genre[];
     authorList?: Author[];
     userProfile?: UserProfile;
-}
+    role?: Role;
+  }
