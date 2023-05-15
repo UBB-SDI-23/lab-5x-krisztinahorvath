@@ -174,11 +174,11 @@ export const ShowAllAuthors = () => {
 				</Tbody>
 			</Table></TableContainer>
 			)}
-			<Container style={{ backgroundColor: 'white', borderRadius: 10, width: 500}}>
-				<Stack spacing={2}>
-					<Pagination count={noOfPages} page={page} onChange={handlePageChange} size="large" variant="outlined" color="secondary" />
-				</Stack> 
-			</Container>		
+		<Container style={{ backgroundColor: 'white', borderRadius: 10, width: '100%', maxWidth: 500, margin: '0 auto'}}>
+			<Stack spacing={2}>
+				<Pagination count={noOfPages} page={page} onChange={handlePageChange} size="large" variant="outlined" color="secondary" />
+			</Stack> 
+		</Container>	
 		</Container>
 	);
 }
