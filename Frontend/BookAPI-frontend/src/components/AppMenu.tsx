@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Container, IconButton, Toolbar, Typography, colors } from "@mui/material";
+import { AppBar, Box, Button, Container, IconButton, Toolbar, Tooltip, Typography, colors } from "@mui/material";
 import { Link, useLocation} from "react-router-dom";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import AddIcon from '@mui/icons-material/Add';
@@ -13,7 +13,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Authors', 'Books', 'Genres', 'Login', 'Register', 'Logout'];
+const pages = ['Authors', 'Books', 'Genres'];
+const settings = ['Login', 'Register', 'Logout'];
 export const AppMenu = () => {
     const location = useLocation();
 	const path = location.pathname;
@@ -128,6 +129,52 @@ export const AppMenu = () => {
 							{page}
 						</Button>
 						))}
+					</Box>
+
+					<Box sx={{ flexGrow: 0 }}>
+						<Tooltip title="Open user profile">
+							<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+								<PersonIcon sx={{color: "white"}}/>
+							</IconButton>
+						</Tooltip>
+						<Menu
+						sx={{ mt: '45px' }}
+						id="menu-appbar"
+						anchorEl={anchorElUser}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+						keepMounted
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+						open={Boolean(anchorElUser)}
+						onClose={handleCloseUserMenu}
+						>
+						{settings.map((setting) => {
+							if (setting === 'Login' && isAuthenticated) {
+								return null; // hide the Login button if authenticated
+							} else if (setting === 'Logout' && !isAuthenticated) {
+								return null; // hide the Logout button if not authenticated
+							} else if (setting === "Register" && isAuthenticated) {
+								return null;
+							} else {
+								return (
+									<MenuItem
+									key={setting}
+									component={Link}
+									to={`/${setting.toLowerCase()}`}
+									onClick={handleCloseNavMenu}
+									selected={location.pathname === `/${setting.toLowerCase()}`}
+									>
+									<Typography textAlign="center">{setting}</Typography>
+									</MenuItem>
+								);
+							}
+						})}
+						</Menu>
 					</Box>
 					
 				</Toolbar>
