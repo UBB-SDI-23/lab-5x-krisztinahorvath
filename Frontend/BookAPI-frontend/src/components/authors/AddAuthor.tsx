@@ -83,6 +83,9 @@ export const AddAuthor = () => {
 			navigate("/authors");
 		} catch (error: any) {
 			console.log(error);
+			if (error.response.status === 401) {
+				displayError("You don't have permission to do this action it!");
+			} 
 			displayError(error.response.data);
 		}
 	};

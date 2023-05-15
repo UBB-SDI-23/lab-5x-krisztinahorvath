@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { Container, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, colors, Paper } from "@mui/material";
+import { Container, TableContainer, TableHead, TableRow, TableCell, TableBody, colors, Paper } from "@mui/material";
 import { BACKEND_URL } from "../../constants";
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+
 
 
 interface AuthorAvgBookLengthDTO{
@@ -33,31 +36,31 @@ export const AuthorWithAvgBookLength = () => {
                 // set the table background color to white and the text color to black
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 600}} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">#</TableCell>
-                                <TableCell align="center">Name</TableCell>
-                                <TableCell align="center">Year of Birth</TableCell>
-                                <TableCell align="center">Address</TableCell>
-                                <TableCell align="center">Email</TableCell>
-                                <TableCell align="center">Phone Number</TableCell>
-                                <TableCell align="center">Average Book Length</TableCell>
-                            </TableRow>
-                        </TableHead>
+                        <Thead>
+                            <Tr>
+                                <Th align="center">#</Th>
+                                <Th align="center">Name</Th>
+                                <Th align="center">Year of Birth</Th>
+                                <Th align="center">Address</Th>
+                                <Th align="center">Email</Th>
+                                <Th align="center">Phone Number</Th>
+                                <Th align="center">Average Book Length</Th>
+                            </Tr>
+                        </Thead>
                         
-                        <TableBody>
+                        <Tbody>
                         {authors.map((author: AuthorAvgBookLengthDTO, index) => (
-                            <TableRow key={author.id}>
-                                <TableCell align="center" component="th" scope="row">{index + 1}</TableCell>
-                                <TableCell align="center" component="th" scope="row">{author.name}</TableCell>
-                                <TableCell align="center">{author.yearOfBirth}</TableCell>
-                                <TableCell align="center">{author.address}</TableCell>
-                                <TableCell align="center">{author.email}</TableCell>
-                                <TableCell align="center">{author.phoneNumber}</TableCell>
-                                <TableCell align="center">{author.avgPages}</TableCell>
-                            </TableRow>
+                            <Tr key={author.id}>
+                                <Td align="center" component="th" scope="row">{index + 1}</Td>
+                                <Td align="center" component="th" scope="row">{author.name}</Td>
+                                <Td align="center">{author.yearOfBirth}</Td>
+                                <Td align="center">{author.address}</Td>
+                                <Td align="right" style={{ whiteSpace: "pre-line", maxWidth: "200px", wordBreak: "break-word" }}>{author.email}</Td>
+					            <Td align="right" style={{ whiteSpace: "pre-line", maxWidth: "200px", wordBreak: "break-word" }}>{author.phoneNumber}</Td>
+                                <Td align="center">{author.avgPages}</Td>
+                            </Tr>
                         ))}
-                        </TableBody>
+                        </Tbody>
                     </Table>
                 </TableContainer>
             )

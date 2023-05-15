@@ -1,4 +1,4 @@
-import { Card, CardActions, CardContent, IconButton } from "@mui/material";
+import { Button, Card, CardActions, CardContent, IconButton, TextField } from "@mui/material";
 import { Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ import { BACKEND_URL, formatDate } from "../../constants";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 interface UserStatistics{
     id?: number;
@@ -23,9 +24,37 @@ interface UserStatistics{
     nrOfGenres: number;
 }
 
+let page = 1;
+
+export const PagePreference = () => {
+	return page;
+}
+
 export const UserDetails = () => {
 	const { userId } = useParams();
 	const [user, setUser] = useState<UserStatistics>();
+
+	const handleClick = async () => {
+        try {
+            await axios.post(`${BACKEND_URL}/authors/pageSizeChange?pageSize=${page}`);
+        } catch (error: any) {
+            console.log(error);
+        }
+    };
+
+
+	// const addPage = async (event: { preventDefault: () => void }) => {
+	// 	event.preventDefault();
+	// 	try {
+	// 		await axios.post(`${BACKEND_URL}/authors/pageSizeChange?pageSize=`, page);
+	// 	} catch (error: any) {
+	// 		console.log(error);
+	// 	}
+	// };
+
+	const handleChange = (event: any) => {
+		page = parseInt(event.target.value);
+	  };
 
 	const navigate = useNavigate();
 
@@ -59,6 +88,18 @@ export const UserDetails = () => {
                     <p>Number of books: {user?.nrOfBooks}</p>
                     <p>Number of authors: {user?.nrOfAuthors}</p>
                     <p>Number of genres: {user?.nrOfGenres}</p>
+					<TextField
+						id="page"
+						label="Enter a number"
+						onChange={handleChange}
+					/>
+					<Button
+						color="inherit"
+						sx={{ mr: 5 }}
+						onClick={handleClick}
+					>
+						Save
+					</Button>
 				</CardContent>
                 {/* <CardActions>
 					<IconButton component={Link} sx={{ mr: 3 }} to={`/authors/${authorId}/edit`}>

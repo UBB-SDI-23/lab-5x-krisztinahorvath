@@ -29,8 +29,11 @@ export const DeleteAuthor = () => {
 			await axios.delete(`${BACKEND_URL}/authors/${authorId}`);
 			displaySuccess("Author deleted successfully!");
 		}
-		catch(error)
+		catch(error: any)
 		{
+			if (error.response.status === 401) {
+				displayError("You don't have permission to perform this action it!");
+			  } 
 			displayError("There was an error deleting the author!");
 		}		
 		navigate("/authors");

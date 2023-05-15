@@ -54,7 +54,7 @@ namespace Lab3BookAPI.Validations
         }
 
 
-        private bool IsPasswordValid(string password)
+        public bool IsPasswordValid(string password)
         {
             return password.Length >= 8 && password.Any(char.IsUpper) && password.Any(char.IsDigit);
         }

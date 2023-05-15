@@ -81,12 +81,16 @@ export const AddBook = () => {
 	const addBook = async (event: { preventDefault: () => void }) => {
 		event.preventDefault();
 		try {
-			await axios.post(`${BACKEND_URL}/books/`, book);
-			displaySuccess("The book was added successfully!");
-			navigate("/books");
+		  await axios.post(`${BACKEND_URL}/books/`, book);
+		  displaySuccess("The book was added successfully!");
+		  navigate("/books");
 		} catch (error: any) {
-			console.log(error);
+		  console.log(error);
+		  if (error.response.status === 401) {
+			displayError("You don't have permission to do this action it!");
+		  } else {
 			displayError(error.response.data);
+		  }
 		}
 	};
 

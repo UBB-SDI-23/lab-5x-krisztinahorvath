@@ -32,7 +32,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Common;
-
+//using System.Data.Entity;
+//using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Data.SqlClient;
+//using Microsoft.AspNetCore.Components;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -45,10 +51,10 @@ namespace Lab3BookAPI.Controllers
         private readonly Validate _validate;
         private readonly IConfiguration _config;
 
-        public UsersController(BookContext context, IOptions<JwtSettings> jwtSettings, Validate validate, IConfiguration config)
+        public UsersController(BookContext context, JwtSettings jwtSettings, Validate validate, IConfiguration config)
         {
             _context = context;
-            _jwtSettings = jwtSettings.Value;
+            _jwtSettings = jwtSettings;
             _validate = validate;
             _config = config;
         }
@@ -67,22 +73,6 @@ namespace Lab3BookAPI.Controllers
                 .ToListAsync();
         }
 
-    //    [HttpGet("secret")]
-    //    public async Task<ActionResult> Secret()
-    //{
-
-    //    // Generate a random 256-bit key
-    //    byte[] keyBytes = new byte[32];
-    //    using (var rng = new RNGCryptoServiceProvider())
-    //    {
-    //        rng.GetBytes(keyBytes);
-    //    }
-
-    //    // Convert the key to a string
-    //    string jwtSecret = Convert.ToBase64String(keyBytes);
-    //    return Ok(jwtSecret);
-    //}
-
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<UserDTO>> Register(UserDTO model)
@@ -94,10 +84,10 @@ namespace Lab3BookAPI.Controllers
             }
 
             // Validate password
-            //if (!IsPasswordValid(model.Password))
-            //{
-            //    return BadRequest("Password is not strong enough.");
-            //}
+            if (!_validate.IsPasswordValid(model.Password))
+            {
+                return BadRequest("Password is not strong enough.");
+            }
 
             // Generate confirmation code
             string confirmationCode = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
@@ -110,7 +100,7 @@ namespace Lab3BookAPI.Controllers
                 Password = HashPassword(model.Password),
                 IsConfirmed = false,
                 ConfirmationCode = confirmationCode,
-                ConfirmationCodeExpiration = confirmationCodeExpiration, 
+                ConfirmationCodeExpiration = confirmationCodeExpiration,
                 UserProfile = new UserProfile
                 {
                     Id = model.Id,
@@ -134,7 +124,7 @@ namespace Lab3BookAPI.Controllers
             };
 
             // return CreatedAtAction(nameof(GetUser), new { id = userDTO.Id }, new { userDTO, confirmationCode });
-            return Ok(new {confirmationCode });
+            return Ok(new { confirmationCode });
         }
 
         // GET /api/register/confirm/{confirmationCode}
@@ -195,6 +185,44 @@ namespace Lab3BookAPI.Controllers
             return Ok(userProfileDTO);
         }
 
+        [HttpPost("bulk-delete")]
+        [Authorize(Policy = "AdminUser")]
+        public async Task<IActionResult> BulkDelete()
+        {
+            // Delete all entities from the database
+            _context.Authors.RemoveRange(_context.Authors);
+            _context.Genres.RemoveRange(_context.Genres);
+            _context.Books.RemoveRange(_context.Books);
+            _context.BookAuthors.RemoveRange(_context.BookAuthors);
+            //_context.Users.RemoveRange(_context.Users);
+            //_context.UserProfiles.RemoveRange(_context.UserProfiles);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("generate-data")]
+        [Authorize(Policy = "AdminUser")]
+        public async Task<IActionResult> GenerateData()
+        {
+            var connectionString = _config.GetConnectionString("LocalBooksDatabase");
+
+            // Read the SQL script from the file
+            var script = System.IO.File.ReadAllText("C:\\Facultate\\Semestrul 4\\MPP\\Labs\\inserts\\InsertData.sql");
+
+            // Execute the SQL script
+            using (var connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                var command = new SqlCommand(script, connection);
+                await command.ExecuteNonQueryAsync();
+            }
+
+            return Ok();
+        }
+
+
         // POST /api/login
         [HttpPost("login")]
         [AllowAnonymous]
@@ -216,7 +244,7 @@ namespace Lab3BookAPI.Controllers
             }
 
             // Generate JWT token
-            string token = GenerateJwtToken(user);
+            string token = GenerateJwtToken(user, _jwtSettings);
 
             return Ok(new { token });
         }
@@ -229,30 +257,22 @@ namespace Lab3BookAPI.Controllers
             return confirmationCode;
         }
 
-
-
         // Helper method to generate a JWT token
-        private string GenerateJwtToken(User user)
+        private string GenerateJwtToken(User user, JwtSettings jwtSettings)
         {
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.Name)
-             };
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Name),
+                new Claim("role", user.Role.ToString())
+            };
 
-            // Get JWT secret from configuration
-            string jwtSecret = _config["Jwt:Secret"];
-            if (string.IsNullOrEmpty(jwtSecret))
-            {
-                throw new InvalidOperationException("JWT secret is not configured.");
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
+                issuer: jwtSettings.Issuer,
+                audience: jwtSettings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: creds);
@@ -286,7 +306,7 @@ namespace Lab3BookAPI.Controllers
         //    return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         //}
 
-       //private string GenerateJwtToken(User user)
+        //private string GenerateJwtToken(User user)
         //{
         //    var tokenHandler = new JwtSecurityTokenHandler();
         //    var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
