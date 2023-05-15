@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../constants";
-import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
+import {Button, CircularProgress, colors, Container, IconButton, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
@@ -10,6 +10,9 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { Genre } from "../../models/Genre";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+
 
 let page = 1;
 export const ShowAllGenres = () => {
@@ -88,40 +91,40 @@ export const ShowAllGenres = () => {
 			{!loading && genres.length > 0 && (
 				<TableContainer component={Paper}>
 					<Table sx={{ minWidth: 650 }} aria-label="simple table">
-						<TableHead>
-							<TableRow>
-								<TableCell>#</TableCell>
-								<TableCell align="right">Name</TableCell>
-								<TableCell align="right">Description</TableCell>
-								<TableCell align="right">Subgenre</TableCell>
-								<TableCell align="right">Country of Origin</TableCell>
-                                <TableCell align="right">Genre Rating</TableCell>
-								<TableCell align="right">No Of Books</TableCell>
-								<TableCell align="right">User Name</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
+						<Thead>
+							<Tr>
+								<Td>#</Td>
+								<Td align="right">Name</Td>
+								<Td align="right">Description</Td>
+								<Td align="right">Subgenre</Td>
+								<Td align="right">Country of Origin</Td>
+                                <Td align="right">Genre Rating</Td>
+								<Td align="right">No Of Books</Td>
+								<Td align="right">User Name</Td>
+							</Tr>
+						</Thead>
+						<Tbody>
 							{genres.map((genre, index) => (
-								<TableRow key={(page-1) * 10 + index + 1}>
-									<TableCell component="th" scope="row">
+								<Tr key={(page-1) * 10 + index + 1}>
+									<Td component="th" scope="row">
 										{(page-1) * 10 + index + 1}
-									</TableCell>
-									<TableCell component="th" scope="row">
+									</Td>
+									<Td component="th" scope="row">
 										<Link to={`/genres/${genre.id}/details`} title="View book details">
 											{genre.name}
 										</Link>
-									</TableCell>
-									<TableCell align="right">{genre.description}</TableCell>
-									<TableCell align="right">{genre.subgenre}</TableCell>
-                                    <TableCell align="right">{genre.countryOfOrigin}</TableCell>
-                                    <TableCell align="right">{genre.genreRating}</TableCell>
-									<TableCell align="right">{nrBooks.at(index)}</TableCell>
-									<TableCell component="th" scope="row">
+									</Td>
+									<Td align="right">{genre.description}</Td>
+									<Td align="right">{genre.subgenre}</Td>
+                                    <Td align="right">{genre.countryOfOrigin}</Td>
+                                    <Td align="right">{genre.genreRating}</Td>
+									<Td align="right">{nrBooks.at(index)}</Td>
+									<Td component="th" scope="row">
 										<Link to={`/users/${genre.userId}/details`} title="View user profile">
 											{genre.userName}
 										</Link>
-									</TableCell>
-                                   	<TableCell align="right">
+									</Td>
+                                   	<Td align="right">
 										<IconButton
 											component={Link}
 											sx={{ mr: 3 }}
@@ -138,10 +141,10 @@ export const ShowAllGenres = () => {
 										<IconButton component={Link} sx={{ mr: 3 }} to={`/genres/${genre.id}/delete`}>
 											<DeleteForeverIcon sx={{ color: "red" }} />
 										</IconButton>
-									</TableCell>
-								</TableRow>
+									</Td>
+								</Tr>
 							))}
-						</TableBody>
+						</Tbody>
 					</Table>
 				</TableContainer>
 			)}

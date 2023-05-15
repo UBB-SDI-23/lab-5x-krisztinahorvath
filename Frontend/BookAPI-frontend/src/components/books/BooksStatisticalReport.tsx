@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Container, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, colors, Paper } from "@mui/material";
+import { Container, TableContainer, TableHead, TableRow, TableCell, TableBody, colors, Paper } from "@mui/material";
 import { BACKEND_URL } from "../../constants";
 
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 interface BookWithAverageAuthorAgeDTO{
     id: number;
@@ -34,33 +36,33 @@ export const BookWithAvgAuthorAge= () => {
                 // set the table background color to white and the text color to black
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 600}} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">#</TableCell>
-                                <TableCell align="center">Title</TableCell>
-                                <TableCell align="center">Description</TableCell>
-                                <TableCell align="center">Year</TableCell>
-                                <TableCell align="center">Pages</TableCell>
-                                <TableCell align="center">Price</TableCell>
-                                <TableCell align="center">Transcript</TableCell>
-                                <TableCell align="center">Average Author Age</TableCell>
-                            </TableRow>
-                        </TableHead>
+                        <Thead>
+                            <Tr>
+                                <Th align="center">#</Th>
+                                <Th align="center">Title</Th>
+                                <Th align="center">Description</Th>
+                                <Th align="center">Year</Th>
+                                <Th align="center">Pages</Th>
+                                <Th align="center">Price</Th>
+                                <Th align="center">Transcript</Th>
+                                <Th align="center">Average Author Age</Th>
+                            </Tr>
+                        </Thead>
                         
-                        <TableBody>
+                        <Tbody>
                         {books.map((book: BookWithAverageAuthorAgeDTO, index) => (
-                            <TableRow key={book.id}>
-                                <TableCell align="center" component="th" scope="row">{index + 1}</TableCell>
-                                <TableCell align="center" component="th" scope="row">{book.title}</TableCell>
-                                <TableCell align="center">{book.description}</TableCell>
-                                <TableCell align="center">{book.year}</TableCell>
-                                <TableCell align="center">{book.pages}</TableCell>
-                                <TableCell align="center">{book.price}</TableCell>
-                                <TableCell align="center">{book.transcript}</TableCell>
-                                <TableCell align="center">{book.averageAuthorAge}</TableCell>
-                            </TableRow>
+                            <Tr key={book.id}>
+                                <Td align="center" component="th" scope="row">{index + 1}</Td>
+                                <Td align="center" component="th" scope="row">{book.title}</Td>
+                                <Td align="center">{book.description}</Td>
+                                <Td align="center">{book.year}</Td>
+                                <Td align="center">{book.pages}</Td>
+                                <Td align="center">{book.price}</Td>
+                                <Td align="center">{book.transcript}</Td>
+                                <Td align="center">{book.averageAuthorAge}</Td>
+                            </Tr>
                         ))}
-                        </TableBody>
+                        </Tbody>
                     </Table>
                 </TableContainer>
             )

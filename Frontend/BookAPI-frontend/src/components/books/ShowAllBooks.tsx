@@ -1,7 +1,7 @@
 import { Book } from "../../models/Book";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../constants";
-import {Button, CircularProgress, colors, Container, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
+import {Button, CircularProgress, colors, Container, IconButton, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip} from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
@@ -12,6 +12,10 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import { useLocation } from "react-router-dom";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+
+
 let page = 1;
 export const ShowAllBooks = () => {
     const [loading, setLoading] = useState(false);
@@ -126,42 +130,42 @@ export const ShowAllBooks = () => {
 			{!loading && books.length > 0 && (
 				<TableContainer component={Paper}>
 					<Table sx={{ minWidth: 650 }} aria-label="simple table">
-						<TableHead>
-							<TableRow>
-								<TableCell>#</TableCell>
-								<TableCell align="right">Title</TableCell>
-								<TableCell align="right">Description</TableCell>
-								<TableCell align="right">Year</TableCell>
-								<TableCell align="right">Pages</TableCell>
-                                <TableCell align="right">Price</TableCell>
-                                <TableCell align="right">Transcript</TableCell>
-                            	<TableCell align="right">No of Authors</TableCell> 
-								<TableCell align="right">User Name</TableCell> 
-							</TableRow>
-						</TableHead>
-						<TableBody>
+						<Thead>
+							<Tr>
+								<Th>#</Th>
+								<Th align="right">Title</Th>
+								<Th align="right">Description</Th>
+								<Th align="right">Year</Th>
+								<Th align="right">Pages</Th>
+                                <Th align="right">Price</Th>
+                                <Th align="right">Transcript</Th>
+                            	<Th align="right">No of Authors</Th> 
+								<Th align="right">User Name</Th> 
+							</Tr>
+						</Thead>
+						<Tbody>
 							{books.map((book, index) => (
-								<TableRow key={(page-1) * 10 + index + 1}>
-									 <TableCell component="th" scope="row">
+								<Tr key={(page-1) * 10 + index + 1}>
+									 <Td component="th" scope="row">
 									 	{(page-1) * 10 + index + 1}
-									 </TableCell> 
-									<TableCell component="th" scope="row">
+									 </Td> 
+									<Td component="th" scope="row">
 										<Link to={`/books/${book.id}/details`} title="View book details">
 											{book.title}
 										</Link>
-									</TableCell>
-									<TableCell align="right">{book.description}</TableCell>
-									<TableCell align="right">{book.year}</TableCell>
-                                    <TableCell align="right">{book.pages}</TableCell>
-                                    <TableCell align="right">{book.price}</TableCell>
-                                    <TableCell align="right">{book.transcript}</TableCell>
-                                    <TableCell align="right">{nrAuthors.at(index)}</TableCell>
-									<TableCell component="th" scope="row">
+									</Td>
+									<Td align="right">{book.description}</Td>
+									<Td align="right">{book.year}</Td>
+                                    <Td align="right">{book.pages}</Td>
+                                    <Td align="right">{book.price}</Td>
+                                    <Td align="right">{book.transcript}</Td>
+                                    <Td align="right">{nrAuthors.at(index)}</Td>
+									<Td component="th" scope="row" align="right">
 										<Link to={`/users/${book.userId}/details`} title="View user profile">
 											{book.userName}
 										</Link>
-									</TableCell>
-									<TableCell align="right">
+									</Td>
+									<Td align="right">
 										<IconButton
 											component={Link}
 											sx={{ mr: 3 }}
@@ -178,10 +182,10 @@ export const ShowAllBooks = () => {
 										<IconButton component={Link} sx={{ mr: 3 }} to={`/books/${book.id}/delete`}>
 											<DeleteForeverIcon sx={{ color: "red" }} />
 										</IconButton>
-									</TableCell>
-								</TableRow>
+									</Td>
+								</Tr>
 							))}
-						</TableBody>
+						</Tbody>
 					</Table>
 				</TableContainer>
 			)}

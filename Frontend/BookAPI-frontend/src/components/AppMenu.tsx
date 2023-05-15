@@ -1,5 +1,5 @@
-import { AppBar, Box, Button, IconButton, Toolbar, Typography, colors } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { AppBar, Box, Button, Container, IconButton, Toolbar, Typography, colors } from "@mui/material";
+import { Link, useLocation} from "react-router-dom";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import AddIcon from '@mui/icons-material/Add';
 import SummarizeIcon from '@mui/icons-material/Summarize';
@@ -8,93 +8,130 @@ import PersonIcon from '@mui/icons-material/Person';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { getAuthToken } from "../auth";
+import React from "react";
+import MenuIcon from '@mui/icons-material/Menu';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
+const pages = ['Authors', 'Books', 'Genres', 'Login', 'Register', 'Logout'];
 export const AppMenu = () => {
     const location = useLocation();
 	const path = location.pathname;
 	const isAuthenticated = Boolean(getAuthToken());
 
+	const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+		null
+	);
+	
+	const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorElNav(event.currentTarget);
+	};
+	const handleCloseNavMenu = () => {
+		setAnchorElNav(null);
+	};
+
+	const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorElUser(event.currentTarget);
+	  };
+
+	  const handleCloseUserMenu = () => {
+		setAnchorElUser(null);
+	  };
+
 	return (
-		<Box sx={{ flexGrow: 1 }}>
-			<AppBar position="static" sx={{ marginBottom: "20px", backgroundColor: colors.purple[200]}}>
-				<Toolbar>
-					<IconButton
-						component={Link}
-						to="/"
-						size="large"
-						edge="start"
-						color="inherit"
-						aria-label="school"
-						sx={{ mr: 2 }}>
-						<MenuBookIcon/>
-					</IconButton>
-					<Typography variant="h6" component="div" sx={{ mr: 5 }}>
+		<AppBar position="static" sx={{backgroundColor: colors.purple[200]}}>
+			<Container maxWidth="xl">
+				<Toolbar disableGutters>
+					<Typography
+						variant="h6"
+						noWrap
+						component="a"
+						href="/"
+						sx={{
+						mr: 2,
+						display: { xs: 'none', md: 'flex' },
+						color: 'inherit',
+						textDecoration: 'none',
+						}}
+					    >
 						Books management
 					</Typography>
-					<Button
-						variant={path.startsWith("/authors") ? "outlined" : "text"}
-						to="/authors"
-						component={Link}
-						color="inherit"
-						sx={{ mr: 5 }}
-						startIcon={<LocalLibraryIcon />}>
-						Authors
-					</Button>
-				    <Button
-						variant={path.startsWith("/books") ? "outlined" : "text"}
-						to="/books"
-						component={Link}
-						color="inherit"
-						sx={{ mr: 5 }}
-						startIcon={<LocalLibraryIcon />}>
-						Books
-					</Button>
-
-					<Button
-						variant={path.startsWith("/genres") ? "outlined" : "text"}
-						to="/genres"
-						component={Link}
-						color="inherit"
-						sx={{ mr: 5 }}
-						startIcon={<LocalLibraryIcon />}>
-						Genres
-					</Button>
-
-					{!isAuthenticated && 
-						<Button
-							variant={path.startsWith("/login") ? "outlined" : "text"}
-							to="/login"
-							component={Link}
+					<Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+						<IconButton
+							size="large"
+							aria-label="account of current user"
+							aria-controls="menu-appbar"
+							aria-haspopup="true"
+							onClick={handleOpenNavMenu}
 							color="inherit"
-							sx={{ mr: 5 }}
-							startIcon={<PersonIcon />}>
-							Login
-						</Button> 
-					} 
-					<Button
-						variant={path.startsWith("/register") ? "outlined" : "text"}
-						to="/register"
-						component={Link}
-						color="inherit"
-						sx={{ mr: 5 }}
-						startIcon={<HowToRegIcon />}>
-						Register
-					</Button> 
+							>
+							<MenuIcon />
+            			</IconButton>
 
-					{isAuthenticated && 
+						<Menu
+							id="menu-appbar"
+							anchorEl={anchorElNav}
+							anchorOrigin={{
+								vertical: 'bottom',
+								horizontal: 'left',
+							}}
+							keepMounted
+							transformOrigin={{
+								vertical: 'top',
+								horizontal: 'left',
+							}}
+							open={Boolean(anchorElNav)}
+							onClose={handleCloseNavMenu}
+							sx={{
+								display: { xs: 'block', md: 'none' },
+							}}
+							>
+							{pages.map((page) => (
+  								<MenuItem key={page} 
+									component={Link} to={`/${page.toLowerCase()}`} 
+									onClick={handleCloseNavMenu} 
+									selected={location.pathname === `/${page.toLowerCase()}`}>
+									<Typography textAlign="center">{page}</Typography>
+  								</MenuItem>
+							))}						
+						</Menu>
+					</Box>
+
+					<MenuBookIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+					<Typography
+						variant="h5"
+						noWrap
+						component="a"
+						href=""
+						sx={{
+						mr: 2,
+						display: { xs: 'flex', md: 'none' },
+						flexGrow: 1,
+						color: 'inherit',
+						textDecoration: 'none',
+						}}
+					>
+						Books management
+					</Typography>
+
+					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+						{pages.map((page) => (
 						<Button
-						variant={path.startsWith("/logout") ? "outlined" : "text"}
-						to="/logout"
-						component={Link}
-						color="inherit"
-						sx={{ mr: 5 }}
-						startIcon={<LogoutIcon />}>
-						Logout
-					</Button> 
-					}
+							key={page}
+							component={Link}
+							to={`/${page.toLowerCase()}`}
+							onClick={handleCloseNavMenu}
+							sx={{ my: 2, color: 'white', display: 'block' }}
+						>
+							{page}
+						</Button>
+						))}
+					</Box>
 					
 				</Toolbar>
+			</Container>
 			</AppBar>
-		</Box>
 	)
 }
