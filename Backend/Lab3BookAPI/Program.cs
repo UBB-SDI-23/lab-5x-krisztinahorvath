@@ -132,6 +132,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using System.Text;
+using Lab3BookAPI.Controllers;
+using Lab3BookAPI.Controllers.ChatApp;
 
 namespace BooksAPI
 {
@@ -247,6 +249,15 @@ namespace BooksAPI
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseWebSockets();
+            app.UseMiddleware<WebSocketMiddleware>();
+            //app.Use(async (context, next) =>
+            //{
+            //    var bookContext = context.RequestServices.GetRequiredService<BookContext>();
+            //    var webSocketMiddleware = new WebSocketMiddleware(next, bookContext);
+            //    await webSocketMiddleware.Invoke(context);
+            //});
 
             app.Run();
         }

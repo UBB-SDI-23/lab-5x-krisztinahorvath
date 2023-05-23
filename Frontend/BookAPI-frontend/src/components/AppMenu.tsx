@@ -13,7 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Authors', 'Books', 'Genres'];
+const pages = ['Authors', 'Books', 'Genres', 'Chat'];
 const settings = ['Login', 'Register', 'Logout'];
 export const AppMenu = () => {
     const location = useLocation();

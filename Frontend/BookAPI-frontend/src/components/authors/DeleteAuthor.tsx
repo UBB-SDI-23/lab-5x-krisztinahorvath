@@ -5,6 +5,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../../constants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getAuthToken } from "../../auth";
 
 
 export const DeleteAuthor = () => {
@@ -26,7 +27,11 @@ export const DeleteAuthor = () => {
 	const handleDelete = async (event: { preventDefault: () => void }) => {
 		event.preventDefault();
 		try{
-			await axios.delete(`${BACKEND_URL}/authors/${authorId}`);
+			await axios.delete(`${BACKEND_URL}/authors/${authorId}`, {
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`,
+				},
+			});
 			displaySuccess("Author deleted successfully!");
 		}
 		catch(error: any)

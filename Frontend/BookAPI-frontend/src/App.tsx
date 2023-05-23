@@ -33,6 +33,7 @@ import { UserDetails } from "./components/users/UserDetails";
 import { UserLogin } from "./components/users/UserLogin";
 import { ConfirmCode, DisplayConfirmationCode, UserRegister } from "./components/users/UserRegister";
 import { UserLogout } from "./components/users/UserLogout";
+import { ChatMessages } from "./components/chats/Chat";
 
 
 function App() {
@@ -77,7 +78,8 @@ function App() {
 					<Route path="/register" element={<UserRegister />}/>
 					<Route path="/register/:confirmationCode/show-confirm-code" element={<DisplayConfirmationCode />} />
 					<Route path="/register/confirm/:confirmationCode" element={<ConfirmCode />} />
-					
+
+					<Route path="/chat" element={<ChatMessages />} />
 				</Routes>
 			</Router>
 		</React.Fragment>
