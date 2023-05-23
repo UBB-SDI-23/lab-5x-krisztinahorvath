@@ -19,6 +19,7 @@ import { debounce } from "lodash";
 import { Author } from "../../models/Author";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getAuthToken } from "../../auth";
 
 
 export const AddAuthor = () => {
@@ -78,7 +79,11 @@ export const AddAuthor = () => {
 	const addAuthor = async (event: { preventDefault: () => void }) => {
 		event.preventDefault();
 		try {
-			await axios.post(`${BACKEND_URL}/authors/`, author);
+			await axios.post(`${BACKEND_URL}/authors/`, author, {
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`,
+				},
+			});
 			displaySuccess("The author was added successfully!");
 			navigate("/authors");
 		} catch (error: any) {

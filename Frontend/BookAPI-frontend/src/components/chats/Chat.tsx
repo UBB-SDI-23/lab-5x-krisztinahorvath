@@ -42,6 +42,12 @@ export const ChatMessages = () => {
     return (
         <div>
         <h1>Chat</h1>
+        <div>
+        {readyState === ReadyState.CONNECTING && <p>Connecting...</p>}
+        {readyState === ReadyState.OPEN && <p>Connected</p>}
+        {readyState === ReadyState.CLOSING && <p>Connection Closing...</p>}
+        {readyState === ReadyState.CLOSED && <p>Connection Closed</p>}
+        </div>
         <form onSubmit={handleSubmit}>
         <label>
         Nickname:
@@ -55,19 +61,13 @@ export const ChatMessages = () => {
         <br />
         <button type="submit">Send</button>
         </form>
-        <h2>Message History</h2>
-        <ul>
-        {messageHistory.map((message, index) => (
-        <li key={index}>
-            {JSON.parse(message.data).nickname}: {JSON.parse(message.data).message}
-        </li>
-        ))}
-        </ul>
+        <h2>Messages</h2>
         <div>
-        {readyState === ReadyState.CONNECTING && <p>Connecting...</p>}
-        {readyState === ReadyState.OPEN && <p>Connected</p>}
-        {readyState === ReadyState.CLOSING && <p>Connection Closing...</p>}
-        {readyState === ReadyState.CLOSED && <p>Connection Closed</p>}
+        {messageHistory.map((message, index) => (
+        <p key={index}>
+            {JSON.parse(message.data).nickname}: {JSON.parse(message.data).message}
+        </p>
+        ))}
         </div>
         </div>
         );

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using System.Security.Claims;
 
 namespace Lab3BookAPI.Controllers
 {
@@ -261,6 +262,19 @@ namespace Lab3BookAPI.Controllers
                 return BadRequest("The field 'YearOfBirth' should be a positive integer between 1500 and 2023!");
             }
 
+            // Extract user id from JWT token
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId))
+            {
+                return Unauthorized("Invalid token!");
+            }
+
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound("User not found!");
+            }
+
             var author = new Author
             {
                 Name = authorDTO.Name,
@@ -268,6 +282,8 @@ namespace Lab3BookAPI.Controllers
                 Address = authorDTO.Address,
                 Email = authorDTO.Email,
                 PhoneNumber = authorDTO.PhoneNumber,
+                User = user,
+                UserId = userId
             };
 
             _context.Authors.Add(author);
@@ -278,17 +294,30 @@ namespace Lab3BookAPI.Controllers
 
         // DELETE: api/Authors/5
         [HttpDelete("{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
-            //if (_context.Author == null)
-            //{
-            //    return NotFound();
-            //}
+            // Extract user id from JWT token
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId))
+            {
+                return Unauthorized("Invalid token!");
+            }
+
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound("User not found!");
+            }
+
             var author = await _context.Authors.FindAsync(id);
             if (author == null)
             {
                 return NotFound();
+            }
+
+            if(author.UserId != userId)
+            {
+                return Unauthorized("Invalid token!");
             }
 
             _context.Authors.Remove(author);

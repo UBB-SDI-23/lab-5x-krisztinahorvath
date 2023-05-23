@@ -252,6 +252,12 @@ namespace BooksAPI
 
             app.UseWebSockets();
             app.UseMiddleware<WebSocketMiddleware>();
+            //app.Use(async (context, next) =>
+            //{
+            //    var bookContext = context.RequestServices.GetRequiredService<BookContext>();
+            //    var webSocketMiddleware = new WebSocketMiddleware(next, bookContext);
+            //    await webSocketMiddleware.Invoke(context);
+            //});
 
             app.Run();
         }
